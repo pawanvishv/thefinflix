@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TheFinFlix — Master Trading Skills</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --accent:#0d9668;--accent-light:#10b981;--accent-bg:rgba(16,185,129,.08);
+    --accent-border:rgba(16,185,129,.18);--accent-glow:rgba(16,185,129,.2);
+    --red:#ef4444;--green:#16a34a;
+    --bg:#f8fafb;--bg-white:#fff;--bg-alt:#f1f5f9;
+    --text-primary:#0f172a;--text-secondary:#64748b;--text-muted:#94a3b8;
+    --gold:#f59e0b;--border:rgba(15,23,42,.07);--border-strong:rgba(15,23,42,.12);
+    --shadow-sm:0 1px 3px rgba(0,0,0,.04);--shadow-md:0 4px 20px rgba(0,0,0,.06);
+    --shadow-lg:0 20px 50px rgba(0,0,0,.08);--shadow-xl:0 30px 70px rgba(0,0,0,.1);
+  }
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text-primary);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+
+  /* ── Ticker ── */
+  .ticker-bar{position:fixed;top:0;left:0;right:0;z-index:150;height:36px;background:#0f172a;border-bottom:1px solid rgba(255,255,255,.06);overflow:hidden;display:flex;align-items:center}
+  .ticker-track{display:flex;gap:48px;animation:tickScroll 35s linear infinite;white-space:nowrap;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500}
+  .ticker-track span{display:inline-flex;align-items:center;gap:6px;color:#cbd5e1}
+  .ticker-track .sym{color:#94a3b8}.ticker-track .up{color:#4ade80}.ticker-track .dn{color:#f87171}
+  @keyframes tickScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+  /* ── Header ── */
+  header{position:fixed;top:36px;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:0 60px;height:64px;background:rgba(255,255,255,.85);backdrop-filter:blur(24px) saturate(1.5);border-bottom:1px solid var(--border);animation:fadeDown .7s cubic-bezier(.22,1,.36,1) both}
+  @keyframes fadeDown{from{transform:translateY(-100%);opacity:0}to{transform:translateY(0);opacity:1}}
+  .logo{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;display:flex;align-items:center;gap:10px}
+  .logo-mark{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-light));display:flex;align-items:center;justify-content:center;box-shadow:0 3px 12px var(--accent-glow)}
+  .logo-mark svg{width:18px;height:18px}
+  .header-right{display:flex;align-items:center;gap:8px}
+  .currency-toggle{display:flex;background:var(--bg-alt);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-right:12px}
+  .currency-toggle button{padding:6px 14px;font-size:12px;font-weight:600;font-family:'JetBrains Mono',monospace;border:none;cursor:pointer;background:transparent;color:var(--text-secondary);transition:all .25s;letter-spacing:.5px}
+  .currency-toggle button.active{background:var(--accent);color:#fff;box-shadow:0 2px 8px var(--accent-glow)}
+  nav{display:flex;align-items:center;gap:4px}
+  nav a{color:var(--text-secondary);text-decoration:none;font-size:13px;font-weight:500;padding:8px 16px;border-radius:8px;transition:all .3s}
+  nav a:hover{color:var(--text-primary);background:var(--bg-alt)}
+  nav .nav-cta{background:var(--accent-bg);color:var(--accent);border:1px solid var(--accent-border)}
+  nav .nav-cta:hover{background:rgba(16,185,129,.14)}
+  .mob-toggle{display:none;background:none;border:none;color:var(--text-primary);cursor:pointer;padding:8px}
+
+  /* ── Hero ── */
+  .hero{position:relative;z-index:2;min-height:100vh;display:flex;align-items:center;padding:140px 60px 100px;gap:60px;background:linear-gradient(170deg,#f0fdf4 0%,#f8fafb 40%,#eff6ff 100%)}
+  .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 600px 400px at 20% 20%,rgba(16,185,129,.06),transparent),radial-gradient(ellipse 500px 400px at 80% 80%,rgba(59,130,246,.04),transparent);pointer-events:none}
+  .hero::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(90deg,rgba(15,23,42,.012) 0 1px,transparent 1px 100px),repeating-linear-gradient(0deg,rgba(15,23,42,.012) 0 1px,transparent 1px 100px);pointer-events:none}
+  .hero-left{flex:1;position:relative;z-index:2}
+  .hero-right{flex:1;position:relative;z-index:2;max-width:560px}
+
+  .hero-badge{display:inline-flex;align-items:center;gap:8px;padding:5px 14px 5px 7px;background:var(--accent-bg);border:1px solid var(--accent-border);border-radius:100px;font-size:12px;font-weight:600;color:var(--accent);margin-bottom:28px;animation:fadeUp .8s .2s cubic-bezier(.22,1,.36,1) both}
+  .hero-badge .pulse{width:8px;height:8px;border-radius:50%;background:var(--accent-light);animation:dotPulse 2s ease-in-out infinite}
+  @keyframes dotPulse{0%,100%{box-shadow:0 0 0 0 rgba(16,185,129,.35)}50%{box-shadow:0 0 0 6px rgba(16,185,129,0)}}
+  .hero h1{font-family:'Playfair Display',serif;font-size:clamp(40px,5.5vw,68px);font-weight:700;line-height:1.06;letter-spacing:-2px;animation:fadeUp .8s .35s cubic-bezier(.22,1,.36,1) both}
+  .hero h1 em{font-style:italic;background:linear-gradient(135deg,var(--accent),var(--accent-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .hero-sub{font-size:17px;color:var(--text-secondary);max-width:440px;margin-top:22px;line-height:1.7;animation:fadeUp .8s .5s cubic-bezier(.22,1,.36,1) both}
+  .hero-actions{display:flex;gap:14px;margin-top:40px;flex-wrap:wrap;animation:fadeUp .8s .65s cubic-bezier(.22,1,.36,1) both}
+  @keyframes fadeUp{from{transform:translateY(28px);opacity:0}to{transform:translateY(0);opacity:1}}
+
+  .btn-primary{display:inline-flex;align-items:center;gap:10px;padding:15px 32px;font-size:14px;font-weight:600;font-family:'DM Sans';background:linear-gradient(135deg,var(--accent),var(--accent-light));color:#fff;border:none;border-radius:13px;cursor:pointer;transition:all .4s cubic-bezier(.22,1,.36,1);box-shadow:0 4px 20px var(--accent-glow)}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 32px var(--accent-glow)}
+  .btn-primary svg{transition:transform .3s}.btn-primary:hover svg{transform:translateX(3px)}
+  .btn-ghost{display:inline-flex;align-items:center;gap:10px;padding:15px 32px;font-size:14px;font-weight:600;font-family:'DM Sans';background:var(--bg-white);color:var(--text-primary);border:1px solid var(--border-strong);border-radius:13px;cursor:pointer;transition:all .4s cubic-bezier(.22,1,.36,1)}
+  .btn-ghost:hover{background:var(--bg-alt);transform:translateY(-2px);box-shadow:var(--shadow-md)}
+
+  /* ── Chart Panel ── */
+  .chart-panel{background:var(--bg-white);border:1px solid var(--border);border-radius:20px;overflow:hidden;box-shadow:var(--shadow-xl);animation:fadeUp .8s .5s cubic-bezier(.22,1,.36,1) both}
+  .chart-header{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--border)}
+  .chart-pair{display:flex;align-items:center;gap:10px}
+  .chart-pair .icon{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#2563eb);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;color:#fff;font-family:'JetBrains Mono',monospace}
+  .chart-pair .info .pair-name{font-weight:600;font-size:15px}
+  .chart-pair .info .pair-full{font-size:11px;color:var(--text-secondary)}
+  .chart-price-live{text-align:right}
+  .chart-price-live .price-val{font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;color:var(--green)}
+  .chart-price-live .price-change{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--green)}
+  .chart-canvas-wrap{padding:8px 12px 4px;height:280px}
+  .chart-canvas-wrap canvas{width:100%;height:100%}
+  .chart-footer{display:flex;border-top:1px solid var(--border)}
+  .chart-footer .cf-item{flex:1;padding:12px;text-align:center;border-right:1px solid var(--border);font-family:'JetBrains Mono',monospace}
+  .chart-footer .cf-item:last-child{border-right:none}
+  .chart-footer .cf-label{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+  .chart-footer .cf-val{font-size:13px;font-weight:600}
+  .chart-footer .cf-val.green{color:var(--green)}.chart-footer .cf-val.red{color:var(--red)}
+
+  /* ── Stats ── */
+  .stats-bar{position:relative;z-index:2;display:flex;justify-content:center;margin-top:-36px;padding:0 24px}
+  .stats-inner{display:flex;background:var(--bg-white);border:1px solid var(--border);border-radius:18px;overflow:hidden;box-shadow:var(--shadow-lg)}
+  .stat-item{padding:28px 44px;text-align:center;position:relative}
+  .stat-item+.stat-item::before{content:'';position:absolute;left:0;top:22%;height:56%;width:1px;background:var(--border)}
+  .stat-num{font-family:'JetBrains Mono',monospace;font-size:30px;font-weight:700;background:linear-gradient(135deg,var(--text-primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .stat-lbl{font-size:11px;color:var(--text-secondary);margin-top:4px;letter-spacing:1px;text-transform:uppercase}
+
+  /* ── Sections ── */
+  .section{position:relative;z-index:2;padding:100px 24px;max-width:1200px;margin:0 auto}
+  .section-hdr{text-align:center;margin-bottom:60px}
+  .section-tag{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:14px;padding:5px 14px;background:var(--accent-bg);border:1px solid var(--accent-border);border-radius:6px}
+  .section-hdr h2{font-family:'Playfair Display',serif;font-size:clamp(30px,4vw,46px);font-weight:700;letter-spacing:-1px}
+  .section-hdr p{color:var(--text-secondary);font-size:16px;margin-top:10px;max-width:480px;margin-left:auto;margin-right:auto;line-height:1.7}
+
+  /* ── Course Cards ── */
+  .courses-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+  .course-card{background:var(--bg-white);border:1px solid var(--border);border-radius:22px;overflow:hidden;transition:all .5s cubic-bezier(.22,1,.36,1);display:flex;flex-direction:column}
+  .course-card:hover{transform:translateY(-8px);border-color:var(--accent-border);box-shadow:var(--shadow-xl)}
+  .course-card.combo{border:2px solid var(--accent);position:relative}
+  .combo-ribbon{position:absolute;top:16px;right:-32px;z-index:5;background:var(--accent);color:#fff;font-size:11px;font-weight:700;padding:5px 40px;transform:rotate(45deg);letter-spacing:1px;box-shadow:0 2px 8px var(--accent-glow)}
+
+  /* Card Image Area - CSS Gradients */
+  .card-visual{position:relative;height:180px;overflow:hidden}
+  .card-visual .card-bg{position:absolute;inset:0}
+  .card-bg.forex{background:linear-gradient(135deg,#0ea5e9,#0284c7 40%,#0369a1)}
+  .card-bg.stock{background:linear-gradient(135deg,#8b5cf6,#7c3aed 40%,#6d28d9)}
+  .card-bg.combo-bg{background:linear-gradient(135deg,var(--accent),#059669 40%,#047857)}
+  .card-visual .card-bg::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(90deg,rgba(255,255,255,.03) 0 1px,transparent 1px 40px),repeating-linear-gradient(0deg,rgba(255,255,255,.03) 0 1px,transparent 1px 40px)}
+  .card-visual canvas{position:absolute;bottom:0;left:0;right:0;height:80px;z-index:1;opacity:.7}
+  .card-visual .card-icon-big{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:2;width:56px;height:56px;border-radius:16px;background:rgba(255,255,255,.15);backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.2)}
+  .card-visual .card-icon-big svg{width:28px;height:28px;color:#fff}
+  .card-badge{position:absolute;top:14px;left:14px;z-index:3;padding:5px 12px;font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;background:rgba(255,255,255,.95);border-radius:7px;color:var(--accent);box-shadow:var(--shadow-sm)}
+  .card-stars{position:absolute;top:14px;right:14px;z-index:3;display:flex;align-items:center;gap:4px;padding:5px 10px;font-size:12px;font-weight:600;background:rgba(255,255,255,.95);border-radius:7px;color:var(--gold);font-family:'JetBrains Mono',monospace;box-shadow:var(--shadow-sm)}
+
+  .card-body{padding:24px;flex:1;display:flex;flex-direction:column}
+  .card-body h3{font-family:'Playfair Display',serif;font-size:20px;font-weight:600;margin-bottom:6px}
+  .card-body .desc{color:var(--text-secondary);font-size:13px;line-height:1.7;margin-bottom:16px}
+  .card-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px}
+  .chip{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;font-size:11px;font-weight:500;background:var(--bg-alt);border:1px solid var(--border);border-radius:7px;color:var(--text-secondary)}
+  .chip svg{width:13px;height:13px;flex-shrink:0;color:var(--accent)}
+
+  .card-bottom{display:flex;align-items:center;justify-content:space-between;padding-top:16px;border-top:1px solid var(--border);margin-top:auto}
+  .price-block{display:flex;flex-direction:column;gap:3px}
+  .price-row{display:flex;align-items:baseline;gap:8px}
+  .price-now{font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:700}
+  .price-was{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--text-muted);text-decoration:line-through}
+  .discount-tag{font-size:10px;font-weight:700;padding:3px 8px;border-radius:5px;background:var(--accent-bg);color:var(--accent);letter-spacing:.5px}
+  .btn-enroll{display:inline-flex;align-items:center;gap:7px;padding:12px 22px;font-size:13px;font-weight:600;font-family:'DM Sans';background:linear-gradient(135deg,var(--accent),var(--accent-light));color:#fff;border:none;border-radius:11px;cursor:pointer;transition:all .4s cubic-bezier(.22,1,.36,1);box-shadow:0 4px 16px var(--accent-glow)}
+  .btn-enroll:hover{transform:translateY(-2px) scale(1.02);box-shadow:0 8px 24px var(--accent-glow)}
+  .btn-enroll svg{transition:transform .3s;width:14px;height:14px}.btn-enroll:hover svg{transform:translateX(3px)}
+
+  /* ── Curriculum Tree ── */
+  .curriculum-section{position:relative;z-index:2;padding:80px 24px;max-width:1200px;margin:0 auto}
+  .curr-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:32px}
+  .curr-card{background:var(--bg-white);border:1px solid var(--border);border-radius:20px;padding:32px;box-shadow:var(--shadow-sm)}
+  .curr-card h3{font-family:'Playfair Display',serif;font-size:22px;font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:10px}
+  .curr-card h3 .dot{width:10px;height:10px;border-radius:50%}
+  .curr-card .sub{color:var(--text-secondary);font-size:13px;margin-bottom:24px}
+  .tree{padding-left:0;list-style:none}
+  .tree-branch{position:relative;padding-left:28px;margin-bottom:6px}
+  .tree-branch::before{content:'';position:absolute;left:6px;top:0;bottom:0;width:2px;background:var(--border)}
+  .tree-branch:last-child::before{height:12px}
+  .tree-branch::after{content:'';position:absolute;left:6px;top:12px;width:14px;height:2px;background:var(--border)}
+  .tree-node{display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:10px;transition:all .25s;cursor:default}
+  .tree-node:hover{background:var(--accent-bg)}
+  .tree-node .node-dot{width:8px;height:8px;border-radius:50%;background:var(--accent-light);flex-shrink:0;box-shadow:0 0 0 3px var(--accent-bg)}
+  .tree-node span{font-size:13.5px;font-weight:500;color:var(--text-primary)}
+  .tree-branch .tree-child{padding-left:24px;margin-top:4px}
+  .tree-child .tree-leaf{display:flex;align-items:center;gap:6px;padding:5px 10px;font-size:12px;color:var(--text-secondary);position:relative;margin-left:6px}
+  .tree-child .tree-leaf::before{content:'';position:absolute;left:-18px;top:50%;width:12px;height:1px;background:var(--border)}
+  .tree-child .tree-leaf svg{width:12px;height:12px;color:var(--accent);flex-shrink:0}
+
+  /* ── Features ── */
+  .features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  .feat-card{padding:32px;border-radius:18px;background:var(--bg-white);border:1px solid var(--border);transition:all .4s cubic-bezier(.22,1,.36,1)}
+  .feat-card:hover{border-color:var(--accent-border);transform:translateY(-4px);box-shadow:var(--shadow-lg)}
+  .feat-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:var(--accent-bg);margin-bottom:18px;color:var(--accent)}
+  .feat-card h4{font-family:'Playfair Display',serif;font-size:18px;font-weight:600;margin-bottom:8px}
+  .feat-card p{font-size:13px;color:var(--text-secondary);line-height:1.7}
+
+  /* ── Testimonials Scroll ── */
+  .testi-section{position:relative;z-index:2;padding:80px 0;background:linear-gradient(180deg,var(--bg),var(--bg-alt),var(--bg));overflow:hidden}
+  .testi-section .section-hdr{padding:0 24px}
+  .testi-track-wrap{overflow:hidden;margin-top:40px}
+  .testi-track{display:flex;gap:24px;animation:testiScroll 40s linear infinite;width:max-content}
+  .testi-track:hover{animation-play-state:paused}
+  @keyframes testiScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+  .testi-card{flex-shrink:0;width:360px;padding:28px;border-radius:18px;background:var(--bg-white);border:1px solid var(--border);box-shadow:var(--shadow-sm)}
+  .testi-stars{display:flex;gap:2px;margin-bottom:14px;color:var(--gold)}
+  .testi-card .qt{font-size:14px;line-height:1.7;color:var(--text-primary);margin-bottom:18px;font-style:italic}
+  .testi-author{display:flex;align-items:center;gap:12px}
+  .testi-av{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;color:#fff}
+  .testi-info .name{font-weight:600;font-size:13px}.testi-info .role{font-size:11px;color:var(--text-secondary)}
+
+  /* ── FAQ ── */
+  .faq-section{position:relative;z-index:2;padding:100px 24px;max-width:800px;margin:0 auto}
+  .faq-item{border:1px solid var(--border);border-radius:14px;margin-bottom:12px;overflow:hidden;background:var(--bg-white);transition:box-shadow .3s}
+  .faq-item:hover{box-shadow:var(--shadow-md)}
+  .faq-q{display:flex;justify-content:space-between;align-items:center;padding:20px 24px;cursor:pointer;font-weight:600;font-size:15px;gap:16px;user-select:none;transition:color .2s}
+  .faq-q:hover{color:var(--accent)}
+  .faq-q .faq-icon{width:28px;height:28px;border-radius:8px;background:var(--bg-alt);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .3s;font-size:18px;color:var(--text-secondary);line-height:1}
+  .faq-item.open .faq-icon{background:var(--accent-bg);color:var(--accent);transform:rotate(45deg)}
+  .faq-a{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.22,1,.36,1)}
+  .faq-item.open .faq-a{max-height:300px}
+  .faq-a-inner{padding:0 24px 20px;font-size:14px;color:var(--text-secondary);line-height:1.7}
+
+  /* ── CTA ── */
+  .cta-wrap{position:relative;z-index:2;max-width:1200px;margin:0 auto 100px;padding:0 24px}
+  .cta-box{padding:56px;border-radius:26px;text-align:center;background:linear-gradient(135deg,#f0fdf4,#eff6ff);border:1px solid var(--accent-border);position:relative;overflow:hidden}
+  .cta-box::before{content:'';position:absolute;width:400px;height:400px;background:radial-gradient(circle,rgba(16,185,129,.08),transparent 70%);top:-200px;right:-80px;pointer-events:none}
+  .cta-box h2{font-family:'Playfair Display',serif;font-size:clamp(26px,3.5vw,38px);font-weight:700;margin-bottom:14px;position:relative}
+  .cta-box p{color:var(--text-secondary);font-size:16px;margin-bottom:30px;max-width:440px;margin-left:auto;margin-right:auto;line-height:1.7;position:relative}
+
+  /* ── Footer ── */
+  footer{position:relative;z-index:2;padding:40px 60px;border-top:1px solid var(--border);background:var(--bg-white)}
+  .footer-inner{display:flex;justify-content:space-between;align-items:center;max-width:1200px;margin:0 auto}
+  .footer-brand{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;display:flex;align-items:center;gap:8px}
+  .footer-brand .fm{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,var(--accent),var(--accent-light));display:flex;align-items:center;justify-content:center}
+  .footer-brand .fm svg{width:14px;height:14px}
+  footer p{font-size:12px;color:var(--text-secondary)}
+  .footer-links{display:flex;gap:20px}
+  .footer-links a{color:var(--text-secondary);text-decoration:none;font-size:12px;transition:color .3s}
+  .footer-links a:hover{color:var(--accent)}
+
+  .fade-in{opacity:0;transform:translateY(28px);transition:all .7s cubic-bezier(.22,1,.36,1)}
+  .fade-in.vis{opacity:1;transform:translateY(0)}
+
+  .mob-nav{display:none;position:fixed;inset:0;z-index:200;background:rgba(255,255,255,.97);backdrop-filter:blur(20px);flex-direction:column;align-items:center;justify-content:center;gap:24px}
+  .mob-nav.open{display:flex}
+  .mob-nav a{color:var(--text-primary);text-decoration:none;font-family:'Playfair Display',serif;font-size:26px;font-weight:600}
+  .mob-nav .x-btn{position:absolute;top:52px;right:24px;background:none;border:none;color:var(--text-primary);font-size:30px;cursor:pointer}
+
+  @media(max-width:960px){
+    .hero{flex-direction:column;padding:140px 24px 60px;gap:40px}.hero-right{max-width:100%}
+    .courses-grid{grid-template-columns:1fr;max-width:480px;margin:0 auto}
+    .curr-grid{grid-template-columns:1fr}
+    .features-grid{grid-template-columns:1fr;max-width:380px;margin:0 auto}
+    .stats-inner{flex-direction:column;width:100%;max-width:340px}
+    .stat-item+.stat-item::before{display:none}.stat-item{padding:18px 28px}
+  }
+  @media(max-width:640px){
+    header{padding:0 16px}nav a:not(.nav-cta){display:none}.mob-toggle{display:block}
+    .chart-canvas-wrap{height:200px}.card-body{padding:18px}
+    .cta-box{padding:36px 20px}.footer-inner{flex-direction:column;gap:16px}footer{padding:30px 20px}
+    .curr-card{padding:24px}
+  }
+</style>
+</head>
+<body>
+
+<div class="mob-nav" id="mobNav">
+  <button class="x-btn" onclick="document.getElementById('mobNav').classList.remove('open')">&times;</button>
+  <a href="#" onclick="this.parentElement.classList.remove('open')">Home</a>
+  <a href="#courses" onclick="this.parentElement.classList.remove('open')">Courses</a>
+  <a href="#curriculum" onclick="this.parentElement.classList.remove('open')">Curriculum</a>
+  <a href="#faq" onclick="this.parentElement.classList.remove('open')">FAQ</a>
+  <a href="https://docs.google.com/forms/" target="_blank">Contact</a>
+</div>
+
+<!-- Ticker -->
+<div class="ticker-bar"><div class="ticker-track" id="ticker"></div></div>
+
+<!-- Header -->
+<header>
+  <div class="logo">
+    <div class="logo-mark"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></div>
+    TheFinFlix
+  </div>
+  <div class="header-right">
+    <div class="currency-toggle" id="currencyToggle">
+      <button class="active" data-cur="INR">₹ INR</button>
+      <button data-cur="USD">$ USD</button>
+    </div>
+    <nav>
+      <a href="#">Home</a>
+      <a href="#courses">Courses</a>
+      <a href="#curriculum">Learn</a>
+      <a href="#faq">FAQ</a>
+      <a href="https://docs.google.com/forms/" target="_blank" class="nav-cta">Contact</a>
+    </nav>
+    <button class="mob-toggle" onclick="document.getElementById('mobNav').classList.add('open')">
+      <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-badge"><span class="pulse"></span> Live Markets Open Now</div>
+    <h1>Master the<br><em>Art of Trading</em></h1>
+    <p class="hero-sub">Professional Forex & Stock Market courses with real-world strategies, live chart analysis, and expert mentorship.</p>
+    <div class="hero-actions">
+      <button class="btn-primary" onclick="document.getElementById('courses').scrollIntoView({behavior:'smooth'})">Explore Courses <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10m0 0l-3-3m3 3l-3 3"/></svg></button>
+      <button class="btn-ghost" onclick="window.open('https://docs.google.com/forms/','_blank')">Free Consultation</button>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="chart-panel">
+      <div class="chart-header">
+        <div class="chart-pair">
+          <div class="icon">$</div>
+          <div class="info"><div class="pair-name">EUR/USD</div><div class="pair-full">Euro / US Dollar</div></div>
+        </div>
+        <div class="chart-price-live">
+          <div class="price-val" id="livePrice">1.0847</div>
+          <div class="price-change">▲ +0.32%</div>
+        </div>
+      </div>
+      <div class="chart-canvas-wrap"><canvas id="heroChart"></canvas></div>
+      <div class="chart-footer">
+        <div class="cf-item"><div class="cf-label">Open</div><div class="cf-val">1.0812</div></div>
+        <div class="cf-item"><div class="cf-label">High</div><div class="cf-val green">1.0863</div></div>
+        <div class="cf-item"><div class="cf-label">Low</div><div class="cf-val red">1.0798</div></div>
+        <div class="cf-item"><div class="cf-label">Vol</div><div class="cf-val">2.4M</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Stats -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat-item"><div class="stat-num">2,500+</div><div class="stat-lbl">Students</div></div>
+    <div class="stat-item"><div class="stat-num">95%</div><div class="stat-lbl">Success Rate</div></div>
+    <div class="stat-item"><div class="stat-num">50+</div><div class="stat-lbl">Live Sessions</div></div>
+    <div class="stat-item"><div class="stat-num">4.9★</div><div class="stat-lbl">Rating</div></div>
+  </div>
+</div>
+
+<!-- Courses -->
+<section class="section" id="courses">
+  <div class="section-hdr fade-in">
+    <span class="section-tag">Courses</span>
+    <h2>Choose Your Path</h2>
+    <p>Comprehensive courses from beginner to advanced, built on real market data.</p>
+  </div>
+  <div class="courses-grid">
+
+    <!-- Forex -->
+    <div class="course-card fade-in" data-course="Forex Trading">
+      <div class="card-visual">
+        <div class="card-bg forex"></div>
+        <div class="card-icon-big"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="9" r="7"/><circle cx="15" cy="15" r="7"/><path d="M8 7h2m-2 2h2m2 4h2m-2 2h2"/></svg></div>
+        <div class="card-badge">Bestseller</div>
+        <div class="card-stars"><svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg> 4.9</div>
+        <canvas class="card-mini-chart"></canvas>
+      </div>
+      <div class="card-body">
+        <h3>Forex Trading Mastery</h3>
+        <p class="desc">Currency pair analysis, risk management, and live strategies from professional traders.</p>
+        <div class="card-chips">
+          <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg> 40+ Lessons</span>
+          <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> Live Sessions</span>
+          <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17l6-6 4 4 8-8"/></svg> Strategies</span>
+        </div>
+        <div class="card-bottom">
+          <div class="price-block">
+            <div class="price-row"><span class="price-now" data-inr="2999" data-usd="35">₹2,999</span><span class="price-was" data-inr="5999" data-usd="72">₹5,999</span></div>
+            <span class="discount-tag">50% OFF</span>
+          </div>
+          <button class="btn-enroll buy">Enroll <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m0 0l-5-5m5 5l-5 5"/></svg></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stock -->
+    <div class="course-card fade-in" data-course="Stock Trading">
+      <div class="card-visual">
+        <div class="card-bg stock"></div>
+        <div class="card-icon-big"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18"/><path d="M7 16l4-4 4 4 5-6"/></svg></div>
+        <div class="card-badge">Popular</div>
+        <div class="card-stars"><svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg> 4.8</div>
+        <canvas class="card-mini-chart"></canvas>
+      </div>
+      <div class="card-body">
+        <h3>Stock Market Pro</h3>
+        <p class="desc">Master stock analysis, portfolio building, and swing trading with hands-on experience.</p>
+        <div class="card-chips">
+          <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg> 55+ Lessons</span>
+          <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg> Mentorship</span>
+          <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg> Portfolio</span>
+        </div>
+        <div class="card-bottom">
+          <div class="price-block">
+            <div class="price-row"><span class="price-now" data-inr="3999" data-usd="48">₹3,999</span><span class="price-was" data-inr="7999" data-usd="96">₹7,999</span></div>
+            <span class="discount-tag">50% OFF</span>
+          </div>
+          <button class="btn-enroll buy">Enroll <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m0 0l-5-5m5 5l-5 5"/></svg></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Combo -->
+    <div class="course-card combo fade-in" data-course="Combo Course (Forex + Stock)">
+      <div class="combo-ribbon">BEST VALUE</div>
+      <div class="card-visual">
+        <div class="card-bg combo-bg"></div>
+        <div class="card-icon-big"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+        <div class="card-badge" style="background:var(--accent);color:#fff">Combo Pack</div>
+        <div class="card-stars"><svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg> 5.0</div>
+        <canvas class="card-mini-chart"></canvas>
+      </div>
+      <div class="card-body">
+        <h3>Forex + Stock Combo</h3>
+        <p class="desc">Get both courses at a special price. Complete trading mastery with forex & equity markets.</p>
+        <div class="card-chips">
+          <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg> Both Courses</span>
+          <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20"/></svg> 95+ Lessons</span>
+          <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 000-7.78z"/></svg> Priority Support</span>
+        </div>
+        <div class="card-bottom">
+          <div class="price-block">
+            <div class="price-row"><span class="price-now" data-inr="5999" data-usd="72">₹5,999</span><span class="price-was" data-inr="13998" data-usd="168">₹13,998</span></div>
+            <span class="discount-tag">57% OFF</span>
+          </div>
+          <button class="btn-enroll buy">Enroll <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m0 0l-5-5m5 5l-5 5"/></svg></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Curriculum Tree -->
+<section class="curriculum-section" id="curriculum">
+  <div class="section-hdr fade-in">
+    <span class="section-tag">Curriculum</span>
+    <h2>What You'll Learn</h2>
+    <p>A structured roadmap from fundamentals to advanced strategies.</p>
+  </div>
+  <div class="curr-grid">
+    <!-- Forex Tree -->
+    <div class="curr-card fade-in">
+      <h3><span class="dot" style="background:#0ea5e9"></span> Forex Trading Mastery</h3>
+      <p class="sub">8 Modules · 40+ Lessons · 6 Weeks</p>
+      <ul class="tree">
+        <li class="tree-branch"><div class="tree-node"><span class="node-dot"></span><span>Module 1 — Forex Fundamentals</span></div>
+          <div class="tree-child"><div class="tree-leaf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg> Currency pairs & market hours</div><div class="tree-leaf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg> Pips, lots & leverage basics</div></div>
+        </li>
+        <li class="tree-branch"><div class="tree-node"><span class="node-dot"></span><span>Module 2 — Technical Analysis</span></div>
+          <div class="tree-child"><div class="tree-leaf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg> Candlestick patterns & chart reading</div><div class="tree-leaf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg> Support, resistance & trendlines</div></div>
+        </li>
+        <li class="tree-branch"><div class="tree-node"><span class="node-dot"></span><span>Module 3 — Indicators & Oscillators</span></div>
+          <div class="tree-child"><div class="tree-leaf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg> RSI, MACD, Bollinger Bands</div><div class="tree-leaf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg> Moving averages & volume analysis</div></div>
+        </li>
+        <li class="tree-branch"><div class="tree-node"><span class="node-dot"></span><span>Module 4 — Risk & Money Management</span></div></li>
+        <li class="tree-branch"><div class="tree-node"><span class="node-dot"></span><span>Module 5 — Live Trading Strategies</span></div></li>
+        <li class="tree-branch"><div class="tree-node"><span class="node-dot"></span><span>Module 6 — News Trading & Fundamentals</span></div></li>
+        <li class="tree-branch"><div class="tree-node"><span class="node-dot"></span><span>Module 7 — Psychology & Discipline</span></div></li>
+        <li class="tree-branch"><div class="tree-node"><span class="node-dot"></span><span>Module 8 — Final Project & Certification</span></div></li>
+      </ul>
+    </div>
+    <!-- Stock Tree -->
+    <div class="curr-card fade-in">
+      <h3><span class="dot" style="background:#8b5cf6"></span> Stock Market Pro</h3>
+      <p class="sub">9 Modules · 55+ Lessons · 8 Weeks</p>
+      <ul class="tree">
+        <li class="tree-branch"><div class="tree-node"><span class="node-dot"></span><span>Module 1 — Stock Market Basics</span></div>
+          <div class="tree-child"><div class="tree-leaf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg> NSE, BSE & how exchanges work</div><div class="tree-leaf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg> Demat accounts & order types</div></div>
+        </li>
+        <li class="tree-branch"><div class="tree-node"><span class="node-dot"></span><span>Module 2 — Fundamental Analysis</span></div>
+          <div class="tree-child"><div class="tree-leaf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg> Reading balance sheets & P&L</div><div class="tree-leaf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg> Valuation ratios (P/E, ROE, EPS)</div></div>
+        </li>
+        <li class="tree-branch"><div class="tree-node"><span class="node-dot"></span><span>Module 3 — Chart Patterns & Price Action</span></div>
+          <div class="tree-child"><div class="tree-leaf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg> Head & shoulders, double top/bottom</div><div class="tree-leaf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg> Breakout trading setups</div></div>
+        </li>
+        <li class="tree-branch"><div class="tree-node"><span class="node-dot"></span><span>Module 4 — Intraday & Swing Trading</span></div></li>
+        <li class="tree-branch"><div class="tree-node"><span class="node-dot"></span><span>Module 5 — Options Basics</span></div></li>
+        <li class="tree-branch"><div class="tree-node"><span class="node-dot"></span><span>Module 6 — Sector Analysis & Screening</span></div></li>
+        <li class="tree-branch"><div class="tree-node"><span class="node-dot"></span><span>Module 7 — Portfolio Construction</span></div></li>
+        <li class="tree-branch"><div class="tree-node"><span class="node-dot"></span><span>Module 8 — Risk Management & SL/TP</span></div></li>
+        <li class="tree-branch"><div class="tree-node"><span class="node-dot"></span><span>Module 9 — Capstone & Certification</span></div></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- Features -->
+<section class="section" id="features">
+  <div class="section-hdr fade-in"><span class="section-tag">Why TheFinFlix</span><h2>Built for Serious Traders</h2><p>Everything you need to go from zero to profitable.</p></div>
+  <div class="features-grid">
+    <div class="feat-card fade-in"><div class="feat-icon"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></div><h4>Live Chart Analysis</h4><p>Trade alongside your mentor reading real candlestick charts with live market data and instant signals.</p></div>
+    <div class="feat-card fade-in"><div class="feat-icon"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 12c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg></div><h4>Risk Management</h4><p>Battle-tested frameworks that protect your capital and keep you profitable in volatile markets.</p></div>
+    <div class="feat-card fade-in"><div class="feat-icon"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg></div><h4>Private Community</h4><p>Join dedicated traders sharing insights, trade setups, and daily market opportunities.</p></div>
+  </div>
+</section>
+
+<!-- Testimonials Scroll -->
+<section class="testi-section">
+  <div class="section-hdr fade-in"><span class="section-tag">Testimonials</span><h2>What Our Students Say</h2><p>Hear from traders who transformed their journey with TheFinFlix.</p></div>
+  <div class="testi-track-wrap"><div class="testi-track" id="testiTrack"></div></div>
+</section>
+
+<!-- FAQ -->
+<section class="faq-section" id="faq">
+  <div class="section-hdr fade-in"><span class="section-tag">FAQ</span><h2>Got Questions?</h2><p>Everything you need to know before you start.</p></div>
+  <div class="faq-list fade-in">
+    <div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')"><span>Who is this course for?</span><span class="faq-icon">+</span></div><div class="faq-a"><div class="faq-a-inner">Our courses are designed for everyone — from complete beginners who've never placed a trade, to intermediate traders looking to refine strategies. No prior experience is needed for the beginner modules.</div></div></div>
+    <div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')"><span>Do I get lifetime access?</span><span class="faq-icon">+</span></div><div class="faq-a"><div class="faq-a-inner">Yes! Once you enroll, you get lifetime access to all course materials, future updates, and recorded live sessions. Learn at your own pace, revisit anytime.</div></div></div>
+    <div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')"><span>What's included in the combo pack?</span><span class="faq-icon">+</span></div><div class="faq-a"><div class="faq-a-inner">The combo pack includes both the Forex Trading Mastery and Stock Market Pro courses at a discounted price of ₹5,999. You also get priority support and access to exclusive combined strategy sessions.</div></div></div>
+    <div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')"><span>Are there live sessions or only recorded?</span><span class="faq-icon">+</span></div><div class="faq-a"><div class="faq-a-inner">Both! You get pre-recorded structured lessons plus weekly live trading sessions where our mentors analyze real-time charts and take live trades. All live sessions are also recorded.</div></div></div>
+    <div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')"><span>How do I pay & get started?</span><span class="faq-icon">+</span></div><div class="faq-a"><div class="faq-a-inner">Click "Enroll" on any course and you'll be connected with us on WhatsApp. We accept UPI, bank transfer, and international payments. You'll get access within 24 hours of payment.</div></div></div>
+    <div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')"><span>Is there a refund policy?</span><span class="faq-icon">+</span></div><div class="faq-a"><div class="faq-a-inner">Yes, we offer a 7-day money-back guarantee if you're not satisfied. No questions asked. We're confident you'll love the content.</div></div></div>
+    <div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')"><span>Do I need a trading account to start?</span><span class="faq-icon">+</span></div><div class="faq-a"><div class="faq-a-inner">Not immediately. You can start learning right away. When you're ready to practice, we'll guide you through setting up a demo account and eventually a live trading account with recommended brokers.</div></div></div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-wrap">
+  <div class="cta-box fade-in">
+    <h2>Ready to Start Trading?</h2>
+    <p>Join thousands of successful traders. Get started today with expert-led courses.</p>
+    <button class="btn-primary" onclick="document.getElementById('courses').scrollIntoView({behavior:'smooth'})">Get Started — <span class="cta-price">₹2,999</span> <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10m0 0l-3-3m3 3l-3 3"/></svg></button>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand"><div class="fm"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="M3 17l6-6 4 4 8-8"/></svg></div> TheFinFlix</div>
+    <p>&copy; 2026 TheFinFlix. All Rights Reserved.</p>
+    <div class="footer-links"><a href="#">Privacy</a><a href="#">Terms</a><a href="https://docs.google.com/forms/" target="_blank">Contact</a></div>
+  </div>
+</footer>
+
+<script>
+/* ── Currency ── */
+let curCur='INR';
+const togBtns=document.querySelectorAll('#currencyToggle button');
+const fmt=(v,c)=>c==='INR'?'₹'+Number(v).toLocaleString('en-IN'):'$'+Number(v).toLocaleString('en-US');
+function updatePrices(c){
+  curCur=c;const k=c.toLowerCase();
+  document.querySelectorAll('.price-now').forEach(e=>e.textContent=fmt(e.dataset[k],c));
+  document.querySelectorAll('.price-was').forEach(e=>e.textContent=fmt(e.dataset[k],c));
+  const cp=document.querySelector('.cta-price');if(cp)cp.textContent=fmt(c==='INR'?2999:35,c);
+}
+togBtns.forEach(b=>b.addEventListener('click',()=>{togBtns.forEach(x=>x.classList.remove('active'));b.classList.add('active');updatePrices(b.dataset.cur)}));
+
+/* ── Ticker ── */
+const ticks=[{s:'EUR/USD',p:'1.0847',c:'+0.32%',u:1},{s:'GBP/USD',p:'1.2634',c:'+0.18%',u:1},{s:'USD/JPY',p:'154.23',c:'-0.14%',u:0},{s:'AAPL',p:'$198.45',c:'+1.24%',u:1},{s:'TSLA',p:'$241.80',c:'-0.67%',u:0},{s:'GOOGL',p:'$176.32',c:'+0.89%',u:1},{s:'BTC/USD',p:'$68,420',c:'+2.1%',u:1},{s:'USD/INR',p:'₹83.42',c:'+0.08%',u:1},{s:'NIFTY 50',p:'₹22,480',c:'+0.56%',u:1},{s:'SENSEX',p:'₹73,890',c:'+0.41%',u:1}];
+let th='';for(let r=0;r<3;r++)ticks.forEach(t=>th+=`<span><span class="sym">${t.s}</span> ${t.p} <span class="${t.u?'up':'dn'}">${t.c}</span></span>`);
+document.getElementById('ticker').innerHTML=th;
+
+/* ── Testimonials ── */
+const testis=[
+  {n:'Rajesh Verma',r:'Forex Trader · Delhi',q:'TheFinFlix changed my trading completely. The candlestick analysis sessions were eye-opening. I went from losing money to consistent profits in 2 months.',c:'#3b82f6'},
+  {n:'Priya Sharma',r:'Stock Trader · Mumbai',q:'The stock market course gave me clarity on how to read financial statements. Now I pick stocks with confidence instead of following random tips.',c:'#8b5cf6'},
+  {n:'Amit Patel',r:'Swing Trader · Ahmedabad',q:'Best investment I made this year. The combo course is incredible value. The WhatsApp community alone is worth the price — daily trade setups!',c:'var(--accent)'},
+  {n:'Sneha Reddy',r:'Beginner · Hyderabad',q:'I was a complete beginner. The step-by-step modules made everything so simple. Within 3 months I was placing trades on my own with proper risk management.',c:'#f59e0b'},
+  {n:'Vikram Singh',r:'Options Trader · Jaipur',q:'The risk management framework saved me from blowing my account. I use the stop-loss strategies from Module 4 on every single trade now.',c:'#ef4444'},
+  {n:'Deepika Nair',r:'Part-time Trader · Kochi',q:'As a working professional, the recorded sessions were perfect. I could learn at my own pace. Live sessions on weekends were a bonus!',c:'#ec4899'},
+  {n:'Arjun Mehta',r:'Full-time Trader · Pune',q:'I tried 3 other courses before TheFinFlix. The difference is the practical approach — real charts, real trades, real strategies. Not just theory.',c:'#14b8a6'},
+  {n:'Kavita Joshi',r:'Investor · Bangalore',q:'The fundamental analysis module helped me build a solid portfolio. Already seeing 18% returns in 6 months. Highly recommend for long-term investors.',c:'#6366f1'},
+];
+let testiHtml='';
+for(let r=0;r<2;r++)testis.forEach(t=>{
+  testiHtml+=`<div class="testi-card"><div class="testi-stars">${'<svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>'.repeat(5)}</div><div class="qt">"${t.q}"</div><div class="testi-author"><div class="testi-av" style="background:${t.c}">${t.n[0]}</div><div class="testi-info"><div class="name">${t.n}</div><div class="role">${t.r}</div></div></div></div>`;
+});
+document.getElementById('testiTrack').innerHTML=testiHtml;
+
+/* ── Charts ── */
+function drawCandlestick(canvas){
+  const ctx=canvas.getContext('2d'),dpr=devicePixelRatio||1,rect=canvas.parentElement.getBoundingClientRect();
+  canvas.width=rect.width*dpr;canvas.height=rect.height*dpr;ctx.scale(dpr,dpr);
+  const W=rect.width,H=rect.height,candles=[];let price=1.078;
+  for(let i=0;i<48;i++){const o=price,ch=(Math.random()-.47)*.003,c=o+ch;candles.push({o,h:Math.max(o,c)+Math.random()*.0015,l:Math.min(o,c)-Math.random()*.0015,c});price=c;}
+  const maxP=Math.max(...candles.map(c=>c.h)),minP=Math.min(...candles.map(c=>c.l)),range=maxP-minP||.001,pad=24,cW=(W-pad*2)/candles.length;
+  const yOf=p=>pad+(1-(p-minP)/range)*(H-pad*2);
+  ctx.strokeStyle='rgba(15,23,42,.05)';ctx.lineWidth=1;
+  for(let i=0;i<5;i++){const y=pad+i*((H-pad*2)/4);ctx.beginPath();ctx.moveTo(pad,y);ctx.lineTo(W-pad,y);ctx.stroke()}
+  candles.forEach((c,i)=>{const x=pad+i*cW+cW*.2,v=Math.random()*.4+.1;ctx.fillStyle=c.c>=c.o?'rgba(22,163,74,.06)':'rgba(239,68,68,.06)';ctx.fillRect(x,H-pad-v*(H*.2),cW*.6,v*(H*.2))});
+  candles.forEach((c,i)=>{const x=pad+i*cW+cW/2,bull=c.c>=c.o,col=bull?'#16a34a':'#ef4444',bT=yOf(Math.max(c.o,c.c)),bB=yOf(Math.min(c.o,c.c)),bH=Math.max(bB-bT,1);ctx.strokeStyle=col;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(x,yOf(c.h));ctx.lineTo(x,yOf(c.l));ctx.stroke();if(bull){ctx.fillStyle='#fff';ctx.fillRect(x-cW*.3,bT,cW*.6,bH);ctx.strokeStyle=col;ctx.lineWidth=1.2;ctx.strokeRect(x-cW*.3,bT,cW*.6,bH)}else{ctx.fillStyle=col;ctx.fillRect(x-cW*.3,bT,cW*.6,bH)}});
+  ctx.beginPath();ctx.strokeStyle='rgba(16,185,129,.5)';ctx.lineWidth=1.5;
+  for(let i=7;i<candles.length;i++){let s=0;for(let j=i-7;j<i;j++)s+=candles[j].c;const x=pad+i*cW+cW/2;i===7?ctx.moveTo(x,yOf(s/7)):ctx.lineTo(x,yOf(s/7))}ctx.stroke();
+  ctx.font='10px JetBrains Mono,monospace';ctx.fillStyle='rgba(15,23,42,.25)';ctx.textAlign='right';
+  for(let i=0;i<=4;i++){const p=minP+(range*(4-i)/4),y=pad+i*((H-pad*2)/4);ctx.fillText(p.toFixed(4),W-4,y+3)}
+}
+function drawMini(canvas,seed){
+  const ctx=canvas.getContext('2d'),dpr=devicePixelRatio||1,rect=canvas.parentElement.getBoundingClientRect();
+  canvas.width=rect.width*dpr;canvas.height=80*dpr;canvas.style.height='80px';ctx.scale(dpr,dpr);
+  const W=rect.width,H=80;let pts=[],v=50+seed*8;
+  for(let i=0;i<60;i++){v+=(Math.random()-.46)*3;v=Math.max(10,Math.min(90,v));pts.push(v)}
+  const mx=Math.max(...pts),mn=Math.min(...pts),yOf=v=>4+(1-(v-mn)/(mx-mn||1))*(H-8);
+  const g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,'rgba(255,255,255,.3)');g.addColorStop(1,'rgba(255,255,255,0)');
+  ctx.beginPath();ctx.moveTo(0,H);pts.forEach((p,i)=>ctx.lineTo(i*(W/(pts.length-1)),yOf(p)));ctx.lineTo(W,H);ctx.closePath();ctx.fillStyle=g;ctx.fill();
+  ctx.beginPath();pts.forEach((p,i)=>{const x=i*(W/(pts.length-1));i===0?ctx.moveTo(x,yOf(p)):ctx.lineTo(x,yOf(p))});ctx.strokeStyle='rgba(255,255,255,.7)';ctx.lineWidth=1.5;ctx.stroke();
+}
+function initCharts(){drawCandlestick(document.getElementById('heroChart'));document.querySelectorAll('.card-mini-chart').forEach((c,i)=>drawMini(c,i+1))}
+addEventListener('load',initCharts);addEventListener('resize',initCharts);
+
+/* ── Live price ── */
+let cp=1.0847;
+setInterval(()=>{cp+=(Math.random()-.48)*.0004;const e=document.getElementById('livePrice');e.textContent=cp.toFixed(4);e.style.color=cp>=1.0847?'#16a34a':'#ef4444'},2000);
+
+/* ── Buy ── */
+document.querySelectorAll('.buy').forEach(b=>b.onclick=function(){const c=this.closest('.course-card').dataset.course;window.open(`https://wa.me/918081240527?text=I%20want%20to%20buy%20${encodeURIComponent(c)}`,'_blank')});
+
+/* ── Scroll reveal ── */
+const obs=new IntersectionObserver(es=>es.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('vis'),i*70);obs.unobserve(e.target)}}),{threshold:.08,rootMargin:'0px 0px -30px 0px'});
+document.querySelectorAll('.fade-in').forEach(e=>obs.observe(e));
+
+/* ── Header scroll ── */
+addEventListener('scroll',()=>{document.querySelector('header').style.background=scrollY>60?'rgba(255,255,255,.95)':'rgba(255,255,255,.85)'},{passive:true});
+</script>
+</body>
+</html>
