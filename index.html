@@ -1362,9 +1362,6 @@ document.querySelectorAll('.stat-num').forEach(e=>statsObs.observe(e));
 import { initializeApp }            from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
 import { getFirestore, collection, addDoc, serverTimestamp }
                                     from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
-import { getStorage, ref as storageRef, uploadBytes, getDownloadURL }
-                                    from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js';
-
 const firebaseConfig = {
   apiKey:            "AIzaSyDvX_NIgVE5CbdxEzSk_mtr59dvAZi0vIE",
   authDomain:        "thefinflix-e8b54.firebaseapp.com",
@@ -1375,40 +1372,26 @@ const firebaseConfig = {
   measurementId:     "G-NR2B8V51GZ"
 };
 
-const fbApp   = initializeApp(firebaseConfig);
-const db      = getFirestore(fbApp);
-const storage = getStorage(fbApp);
+const fbApp = initializeApp(firebaseConfig);
+const db    = getFirestore(fbApp);
 
 // Expose so the inline submitPayModal can call it
 window._fbSaveEnrollment = async function({ name, email, mobile, course, enrolled_at, screenshotFile }) {
 
-  // 1 — Upload screenshot to Storage (if provided)
-  let proofUrl  = null;
-  let proofPath = null;
-  if (screenshotFile) {
-    const ext  = screenshotFile.name.split('.').pop() || 'jpg';
-    const ts   = Date.now();
-    const uid  = crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2);
-    proofPath  = `uploads/payment/${ts}_${uid}.${ext}`;
-    const sRef = storageRef(storage, proofPath);
-    await uploadBytes(sRef, screenshotFile);
-    proofUrl = await getDownloadURL(sRef);
-  }
-
-  // 2 — Save record to Firestore
+  // Save enrollment record to Firestore
+  // Screenshot is shared directly to WhatsApp (no Storage upload needed)
   const docRef = await addDoc(collection(db, 'user_payments'), {
-    name:        name.trim(),
-    email:       email.trim(),
-    mobile:      mobile.trim(),
-    course:      course.trim(),
-    enrolled_at: enrolled_at,
-    proof_path:  proofPath  || null,
-    proof_url:   proofUrl   || null,
-    wa_sent:     true,
-    created_at:  serverTimestamp()
+    name:             name.trim(),
+    email:            email.trim(),
+    mobile:           mobile.trim(),
+    course:           course.trim(),
+    enrolled_at:      enrolled_at,
+    has_proof_attach: screenshotFile ? true : false,
+    wa_sent:          true,
+    created_at:       serverTimestamp()
   });
 
-  return { id: docRef.id, proof_url: proofUrl };
+  return { id: docRef.id };
 };
 </script>
 </body>
