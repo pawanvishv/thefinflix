@@ -456,6 +456,7 @@
   .pay-field input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-bg)}
   .pay-field input::placeholder{color:var(--text-muted)}
   .pay-field input.error{border-color:#ef4444;box-shadow:0 0 0 3px rgba(239,68,68,.08)}
+  .pay-field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
   .pay-modal-actions{display:flex;gap:10px;margin-top:14px}
   .pay-modal-cancel{padding:12px 16px;font-size:13px;font-weight:600;font-family:'DM Sans';background:var(--bg-alt);color:var(--text-secondary);border:1px solid var(--border);border-radius:11px;cursor:pointer;transition:all .25s;white-space:nowrap}
   .pay-modal-cancel:hover{background:var(--border);color:var(--text-primary)}
@@ -548,6 +549,16 @@
           <div class="pay-field">
             <label>Mobile Number</label>
             <input type="tel" id="payMobile" placeholder="Enter your mobile number" autocomplete="tel">
+          </div>
+          <div class="pay-field-row">
+            <div class="pay-field" style="margin-bottom:0">
+              <label>City</label>
+              <input type="text" id="payCity" placeholder="Your city" autocomplete="address-level2">
+            </div>
+            <div class="pay-field" style="margin-bottom:0">
+              <label>State</label>
+              <input type="text" id="payState" placeholder="Your state" autocomplete="address-level1">
+            </div>
           </div>
           <div class="pay-field">
             <label>Payment Screenshot <span style="color:var(--text-muted);font-weight:400;font-size:11px">(Optional)</span></label>
@@ -1197,8 +1208,10 @@ async function submitPayModal(){
   const name=document.getElementById('payName').value.trim();
   const email=document.getElementById('payEmail').value.trim();
   const mobile=document.getElementById('payMobile').value.trim();
+  const city=document.getElementById('payCity').value.trim();
+  const state=document.getElementById('payState').value.trim();
   let valid=true;
-  ['payName','payEmail','payMobile'].forEach(id=>{
+  ['payName','payEmail','payMobile','payCity','payState'].forEach(id=>{
     const el=document.getElementById(id);
     if(!el.value.trim()){el.classList.add('error');valid=false;}
     else el.classList.remove('error');
@@ -1221,6 +1234,8 @@ async function submitPayModal(){
 Name: ${name}
 Email: ${email}
 Mobile: ${mobile}
+City: ${city}
+State: ${state}
 
 Payment done. Please confirm my enrollment.`;
   const waUrl=`https://wa.me/918081240527?text=${encodeURIComponent(msg)}`;
@@ -1235,7 +1250,7 @@ Payment done. Please confirm my enrollment.`;
     const saveFn=window._fbSaveEnrollment;
     if(typeof saveFn==='function'){
       await saveFn({
-        name, email, mobile, course,
+        name, email, mobile, city, state, course,
         enrolled_at: time,
         screenshotFile: hasScreenshot ? screenshotInput.files[0] : null
       });
@@ -1282,7 +1297,7 @@ document.querySelectorAll('.buy').forEach(b=>b.onclick=function(){
   const now=new Date();
   const opts={day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',hour12:true};
   document.getElementById('payModalTime').textContent=now.toLocaleString('en-IN',opts);
-  ['payName','payEmail','payMobile'].forEach(id=>{const el=document.getElementById(id);el.value='';el.classList.remove('error');});
+  ['payName','payEmail','payMobile','payCity','payState'].forEach(id=>{const el=document.getElementById(id);el.value='';el.classList.remove('error');});
   /* reset screenshot upload */
   const si=document.getElementById('payScreenshot');si.value='';
   document.getElementById('payScreenshotPreview').style.display='none';
@@ -1361,12 +1376,15 @@ document.querySelectorAll('.stat-num').forEach(e=>statsObs.observe(e));
 <script>
 const _GAS_URL = 'https://script.google.com/macros/s/AKfycbyW3TFCzeHiAM1eA2X2UlSDswSMuB0wuq6MMj7v5ESpr5Cl3RmzuQ2fFrKgb863Jhj8/exec';
 
-window._fbSaveEnrollment = async function({ name, email, mobile, course, enrolled_at, screenshotFile }) {
+window._fbSaveEnrollment = async function({ name, email, mobile, city, state, course, enrolled_at, screenshotFile }) {
   const params = new URLSearchParams({
-    name, email, mobile, course,
-    enrolled_at: enrolled_at || ''
+    name, email, mobile,
+    city:        city        || '',
+    state:       state       || '',
+    course,
+    enrolled_at: enrolled_at || '',
+    has_proof:   screenshotFile ? 'Yes' : 'No'
   });
-  // GET with URL params — always works cross-origin, no CORS issues
   await fetch(`${_GAS_URL}?${params.toString()}`, { mode: 'no-cors' });
 };
 </script>
