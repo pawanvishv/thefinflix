@@ -1357,40 +1357,28 @@ const statsObs=new IntersectionObserver(entries=>{
 document.querySelectorAll('.stat-num').forEach(e=>statsObs.observe(e));
 </script>
 
-<!-- ── Firestore REST API (no SDK, bypasses App Check) ────────────── -->
+<!-- ── Google Apps Script → Google Sheets ─────────────────────────── -->
 <script>
-const _FS_PROJECT = 'thefinflix-e8b54';
-const _FS_API_KEY = 'AIzaSyDvX_NIgVE5CbdxEzSk_mtr59dvAZi0vIE';
-const _FS_BASE    = `https://firestore.googleapis.com/v1/projects/${_FS_PROJECT}/databases/(default)/documents`;
+const _GAS_URL = 'https://script.google.com/macros/s/AKfycbwrAuSyq-fk-fhe3_H0gcQ6w8bAUxbiJlQMxz086PYAXxzC7jFTLv2DbCpfh712AoE6/exec';
 
 window._fbSaveEnrollment = async function({ name, email, mobile, course, enrolled_at, screenshotFile }) {
-  const fields = {
-    name:             { stringValue:  name.trim()      },
-    email:            { stringValue:  email.trim()     },
-    mobile:           { stringValue:  mobile.trim()    },
-    course:           { stringValue:  course.trim()    },
-    enrolled_at:      { stringValue:  enrolled_at      },
-    has_proof_attach: { booleanValue: !!screenshotFile },
-    wa_sent:          { booleanValue: true              },
-    created_at:       { timestampValue: new Date().toISOString() }
+  const payload = {
+    name,
+    email,
+    mobile,
+    course,
+    enrolled_at,
+    has_proof_attach: !!screenshotFile
   };
 
-  const resp = await fetch(
-    `${_FS_BASE}/user_payments?key=${_FS_API_KEY}`,
-    {
-      method:  'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify({ fields })
-    }
-  );
-
-  if (!resp.ok) {
-    const err = await resp.json().catch(() => ({}));
-    throw new Error(err.error?.message || `HTTP ${resp.status}`);
-  }
-
-  const data = await resp.json();
-  return { id: data.name?.split('/').pop() };
+  // Apps Script requires no-cors mode from external sites
+  await fetch(_GAS_URL, {
+    method:  'POST',
+    mode:    'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body:    JSON.stringify(payload)
+  });
+  // no-cors returns opaque response — if no exception thrown, it succeeded
 };
 </script>
 </body>
