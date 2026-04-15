@@ -1275,7 +1275,9 @@ Payment done. Please confirm my enrollment.`;
       });
     }
 
-    /* ── Saved — now open WhatsApp ── */
+    /* ── Saved — restore button then open WhatsApp ── */
+    proceedBtn.disabled=false;
+    proceedBtn.innerHTML=origHtml;
     closePayModal();
 
     if(hasScreenshot){
