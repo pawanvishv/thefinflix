@@ -10,33 +10,38 @@
     --accent:#0d9668;--accent-light:#10b981;--accent-bg:rgba(16,185,129,.08);
     --accent-border:rgba(16,185,129,.18);--accent-glow:rgba(16,185,129,.2);
     --red:#ef4444;--green:#16a34a;
-    --bg:#f8fafb;--bg-white:#fff;--bg-alt:#f1f5f9;
+    --bg:#f0f6ff;--bg-white:#f8fbff;--bg-alt:#e6effc;
     --text-primary:#0f172a;--text-secondary:#64748b;--text-muted:#94a3b8;
     --gold:#f59e0b;--border:rgba(15,23,42,.07);--border-strong:rgba(15,23,42,.12);
     --shadow-sm:0 1px 3px rgba(0,0,0,.04);--shadow-md:0 4px 20px rgba(0,0,0,.06);
     --shadow-lg:0 20px 50px rgba(0,0,0,.08);--shadow-xl:0 30px 70px rgba(0,0,0,.1);
   }
   *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-  html{scroll-behavior:smooth}
-  body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text-primary);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+  html{scroll-behavior:smooth;overflow-x:hidden;max-width:100vw}
+  body{font-family:'DM Sans',sans-serif;background-color:var(--bg);background-image:radial-gradient(ellipse 70% 50% at 90% 5%,rgba(255,180,180,.22),transparent),radial-gradient(ellipse 60% 45% at 5% 95%,rgba(255,150,150,.16),transparent),radial-gradient(ellipse 55% 45% at 50% 50%,rgba(99,136,212,.06),transparent),radial-gradient(circle,rgba(99,136,212,.18) 1px,transparent 1px);background-size:auto,auto,auto,36px 36px;background-position:0 0,0 0,0 0,0 0;color:var(--text-primary);overflow-x:hidden;-webkit-font-smoothing:antialiased;width:100%;max-width:100vw}
 
   /* ── Ticker ── */
-  .ticker-bar{position:fixed;top:0;left:0;right:0;z-index:150;height:36px;background:#0f172a;border-bottom:1px solid rgba(255,255,255,.06);overflow:hidden;display:flex;align-items:center}
-  .ticker-track{display:flex;gap:48px;animation:tickScroll 35s linear infinite;white-space:nowrap;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500}
+  .ticker-bar{position:fixed;top:0;left:0;right:0;z-index:150;height:36px;background:#0f172a;border-bottom:1px solid rgba(255,255,255,.06);overflow:hidden;display:flex;align-items:center;contain:layout paint style;max-width:100vw;transform:translateZ(0)}
+  .ticker-track{display:flex;gap:48px;animation:tickScroll 35s linear infinite;white-space:nowrap;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500;will-change:transform;backface-visibility:hidden}
   .ticker-track span{display:inline-flex;align-items:center;gap:6px;color:#cbd5e1}
   .ticker-track .sym{color:#94a3b8}.ticker-track .up{color:#4ade80}.ticker-track .dn{color:#f87171}
   @keyframes tickScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 
   /* ── Header ── */
-  header{position:fixed;top:36px;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:0 60px;height:64px;background:rgba(255,255,255,.85);backdrop-filter:blur(24px) saturate(1.5);border-bottom:1px solid var(--border);animation:fadeDown .7s cubic-bezier(.22,1,.36,1) both}
+  header{position:fixed;top:36px;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:0 60px;height:64px;background:rgba(255,255,255,.85);backdrop-filter:blur(24px) saturate(1.5);border-bottom:1px solid var(--border);animation:fadeDown .7s cubic-bezier(.22,1,.36,1) forwards;overflow:hidden}
+  header::after{content:'';position:absolute;top:0;left:-80%;width:55%;height:100%;background:linear-gradient(100deg,transparent 20%,rgba(255,255,255,.65) 50%,transparent 80%);animation:headerShimmer 1.1s 0.75s ease-out forwards;pointer-events:none;z-index:10}
   @keyframes fadeDown{from{transform:translateY(-100%);opacity:0}to{transform:translateY(0);opacity:1}}
+  @keyframes headerShimmer{0%{left:-80%}100%{left:130%}}
   .logo{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;display:flex;align-items:center;gap:10px}
   .logo-mark{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-light));display:flex;align-items:center;justify-content:center;box-shadow:0 3px 12px var(--accent-glow)}
   .logo-mark svg{width:18px;height:18px}
   .header-right{display:flex;align-items:center;gap:8px}
-  .currency-toggle{display:flex;background:var(--bg-alt);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-right:12px}
-  .currency-toggle button{padding:6px 14px;font-size:12px;font-weight:600;font-family:'JetBrains Mono',monospace;border:none;cursor:pointer;background:transparent;color:var(--text-secondary);transition:all .25s;letter-spacing:.5px}
-  .currency-toggle button.active{background:var(--accent);color:#fff;box-shadow:0 2px 8px var(--accent-glow)}
+  .currency-toggle{display:flex;background:#eef2f7;border:1.5px solid rgba(15,23,42,.09);border-radius:13px;padding:4px;gap:3px;margin-right:14px;box-shadow:inset 0 1px 4px rgba(0,0,0,.07),0 1px 0 rgba(255,255,255,.9)}
+  .currency-toggle button{padding:6px 15px;font-size:11.5px;font-weight:700;font-family:'JetBrains Mono',monospace;border:none;cursor:pointer;background:transparent;color:var(--text-secondary);transition:all .28s cubic-bezier(.22,1,.36,1);letter-spacing:.6px;border-radius:9px;display:flex;align-items:center;gap:5px;position:relative;white-space:nowrap}
+  .currency-toggle button .csym{font-size:14px;font-weight:800;line-height:1;transition:transform .28s cubic-bezier(.22,1,.36,1)}
+  .currency-toggle button:hover:not(.active){background:rgba(15,23,42,.06);color:var(--text-primary)}
+  .currency-toggle button.active{background:linear-gradient(135deg,var(--accent) 0%,var(--accent-light) 100%);color:#fff;box-shadow:0 3px 12px var(--accent-glow),inset 0 1px 0 rgba(255,255,255,.2)}
+  .currency-toggle button.active .csym{transform:scale(1.15)}
   nav{display:flex;align-items:center;gap:4px}
   nav a{color:var(--text-secondary);text-decoration:none;font-size:13px;font-weight:500;padding:8px 16px;border-radius:8px;transition:all .3s}
   nav a:hover{color:var(--text-primary);background:var(--bg-alt)}
@@ -45,19 +50,23 @@
   .mob-toggle{display:none;background:none;border:none;color:var(--text-primary);cursor:pointer;padding:8px}
 
   /* ── Hero ── */
-  .hero{position:relative;z-index:2;min-height:100vh;display:flex;align-items:center;padding:140px 60px 100px;gap:60px;background:linear-gradient(170deg,#f0fdf4 0%,#f8fafb 40%,#eff6ff 100%)}
-  .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 600px 400px at 20% 20%,rgba(16,185,129,.06),transparent),radial-gradient(ellipse 500px 400px at 80% 80%,rgba(59,130,246,.04),transparent);pointer-events:none}
-  .hero::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(90deg,rgba(15,23,42,.012) 0 1px,transparent 1px 100px),repeating-linear-gradient(0deg,rgba(15,23,42,.012) 0 1px,transparent 1px 100px);pointer-events:none}
-  .hero-left{flex:1;position:relative;z-index:2}
-  .hero-right{flex:1;position:relative;z-index:2;max-width:560px}
+  .hero{position:relative;z-index:2;min-height:100vh;display:flex;align-items:center;padding:140px 60px 100px;gap:60px;background:linear-gradient(155deg,#edfdf6 0%,#f0f8ff 30%,#fff5f5 65%,#eef5ff 100%);overflow:hidden}
+  .hero::before{content:'';position:absolute;inset:0;z-index:0;background:radial-gradient(ellipse 800px 600px at -5% 25%,rgba(16,185,129,.1),transparent 55%),radial-gradient(ellipse 600px 500px at 105% 15%,rgba(239,68,68,.08),transparent 50%),radial-gradient(ellipse 700px 600px at 105% 80%,rgba(59,130,246,.08),transparent 55%);pointer-events:none}
+  .hero::after{content:'';position:absolute;inset:0;z-index:0;background:repeating-linear-gradient(90deg,rgba(16,185,129,.045) 0 1px,transparent 1px 80px),repeating-linear-gradient(0deg,rgba(16,185,129,.045) 0 1px,transparent 1px 80px);pointer-events:none}
+  .hero-left{flex:1;min-width:0;position:relative;z-index:2}
+  .hero-right{flex:1;min-width:0;position:relative;z-index:2;max-width:560px}
+  /* bg canvas layer */
+  .hero-bg-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;opacity:1}
+  /* bottom blend */
+  .hero-bottom-fade{position:absolute;bottom:0;left:0;right:0;height:120px;background:linear-gradient(to bottom,transparent,rgba(240,246,255,.7));z-index:3;pointer-events:none}
 
-  .hero-badge{display:inline-flex;align-items:center;gap:8px;padding:5px 14px 5px 7px;background:var(--accent-bg);border:1px solid var(--accent-border);border-radius:100px;font-size:12px;font-weight:600;color:var(--accent);margin-bottom:28px;animation:fadeUp .8s .2s cubic-bezier(.22,1,.36,1) both}
+  .hero-badge{display:inline-flex;align-items:center;gap:8px;padding:5px 14px 5px 7px;background:var(--accent-bg);border:1px solid var(--accent-border);border-radius:100px;font-size:12px;font-weight:600;color:var(--accent);margin-bottom:28px;animation:fadeUp .8s .2s cubic-bezier(.22,1,.36,1) forwards;opacity:0}
   .hero-badge .pulse{width:8px;height:8px;border-radius:50%;background:var(--accent-light);animation:dotPulse 2s ease-in-out infinite}
   @keyframes dotPulse{0%,100%{box-shadow:0 0 0 0 rgba(16,185,129,.35)}50%{box-shadow:0 0 0 6px rgba(16,185,129,0)}}
-  .hero h1{font-family:'Playfair Display',serif;font-size:clamp(40px,5.5vw,68px);font-weight:700;line-height:1.06;letter-spacing:-2px;animation:fadeUp .8s .35s cubic-bezier(.22,1,.36,1) both}
-  .hero h1 em{font-style:italic;background:linear-gradient(135deg,var(--accent),var(--accent-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-  .hero-sub{font-size:17px;color:var(--text-secondary);max-width:440px;margin-top:22px;line-height:1.7;animation:fadeUp .8s .5s cubic-bezier(.22,1,.36,1) both}
-  .hero-actions{display:flex;gap:14px;margin-top:40px;flex-wrap:wrap;animation:fadeUp .8s .65s cubic-bezier(.22,1,.36,1) both}
+  .hero h1{font-family:'Playfair Display',serif;font-size:clamp(40px,5.5vw,68px);font-weight:700;line-height:1.15;letter-spacing:-1.5px;animation:fadeUp .8s .35s cubic-bezier(.22,1,.36,1) forwards;opacity:0}
+  .hero h1 em{font-style:italic;background:linear-gradient(135deg,var(--accent),var(--accent-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:inline-block;padding-bottom:0.08em}
+  .hero-sub{font-size:17px;color:var(--text-secondary);max-width:100%;margin-top:22px;line-height:1.75;animation:fadeUp .8s .5s cubic-bezier(.22,1,.36,1) forwards;opacity:0}
+  .hero-actions{display:flex;gap:14px;margin-top:40px;flex-wrap:wrap;animation:fadeUp .8s .65s cubic-bezier(.22,1,.36,1) forwards;opacity:0}
   @keyframes fadeUp{from{transform:translateY(28px);opacity:0}to{transform:translateY(0);opacity:1}}
 
   .btn-primary{display:inline-flex;align-items:center;gap:10px;padding:15px 32px;font-size:14px;font-weight:600;font-family:'DM Sans';background:linear-gradient(135deg,var(--accent),var(--accent-light));color:#fff;border:none;border-radius:13px;cursor:pointer;transition:all .4s cubic-bezier(.22,1,.36,1);box-shadow:0 4px 20px var(--accent-glow)}
@@ -67,7 +76,7 @@
   .btn-ghost:hover{background:var(--bg-alt);transform:translateY(-2px);box-shadow:var(--shadow-md)}
 
   /* ── Chart Panel ── */
-  .chart-panel{background:var(--bg-white);border:1px solid var(--border);border-radius:20px;overflow:hidden;box-shadow:var(--shadow-xl);animation:fadeUp .8s .5s cubic-bezier(.22,1,.36,1) both}
+  .chart-panel{background:var(--bg-white);border:1px solid var(--border);border-radius:20px;overflow:hidden;box-shadow:var(--shadow-xl);animation:fadeUp .8s .5s cubic-bezier(.22,1,.36,1) forwards;opacity:0}
   .chart-header{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--border)}
   .chart-pair{display:flex;align-items:center;gap:10px}
   .chart-pair .icon{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#2563eb);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;color:#fff;font-family:'JetBrains Mono',monospace}
@@ -137,6 +146,26 @@
   .btn-enroll:hover{transform:translateY(-2px) scale(1.02);box-shadow:0 8px 24px var(--accent-glow)}
   .btn-enroll svg{transition:transform .3s;width:14px;height:14px}.btn-enroll:hover svg{transform:translateX(3px)}
 
+  /* ── Schedule ── */
+  .schedule-section{position:relative;z-index:2;padding:0 24px 80px;max-width:1200px;margin:0 auto}
+  .schedule-wrap{background:linear-gradient(135deg,#f0fdf4,#eff6ff,#fff3f3);border:1px solid var(--accent-border);border-radius:24px;padding:40px 48px;display:flex;align-items:center;gap:48px;flex-wrap:wrap}
+  .schedule-label{flex:0 0 auto;min-width:220px}
+  .schedule-label .days-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;background:var(--accent);color:#fff;border-radius:8px;font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px}
+  .schedule-label h3{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--text-primary);margin-bottom:4px}
+  .schedule-label p{font-size:13px;color:var(--text-secondary);margin-bottom:10px}
+  .schedule-platforms{display:flex;gap:8px;flex-wrap:wrap;margin-top:2px}
+  .platform-pill{display:inline-flex;align-items:center;gap:5px;padding:5px 11px;background:#fff;border:1px solid var(--border);border-radius:8px;font-size:11.5px;font-weight:600;color:var(--text-secondary);box-shadow:var(--shadow-sm)}
+  .schedule-slots{display:flex;gap:16px;flex:1;flex-wrap:wrap}
+  .slot-card{flex:1;min-width:180px;background:#fff;border:1px solid var(--border);border-radius:16px;padding:20px 24px;display:flex;align-items:center;gap:16px;box-shadow:0 4px 20px rgba(0,0,0,.04);transition:all .3s cubic-bezier(.22,1,.36,1)}
+  .slot-card:hover{border-color:var(--accent-border);box-shadow:0 8px 32px rgba(16,185,129,.1);transform:translateY(-3px)}
+  .slot-icon{width:46px;height:46px;border-radius:13px;background:var(--accent-bg);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--accent)}
+  .slot-icon svg{width:22px;height:22px}
+  .slot-info .slot-time{font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;color:var(--text-primary);line-height:1.2}
+  .slot-info .slot-meta{font-size:11px;color:var(--text-secondary);margin-top:4px;font-weight:500;letter-spacing:.5px;text-transform:uppercase}
+  .schedule-divider{width:1px;height:60px;background:var(--border);flex-shrink:0}
+  @media(max-width:960px){.schedule-section{padding:0 24px 60px}.schedule-wrap{padding:32px 28px;gap:24px}.schedule-divider{display:none}}
+  @media(max-width:640px){.schedule-section{padding:0 18px 52px}.schedule-wrap{padding:22px 18px;gap:18px;flex-direction:column;align-items:flex-start}.schedule-label{width:100%;min-width:unset}.schedule-slots{width:100%;flex-direction:column;gap:10px}.slot-card{min-width:unset;width:100%;padding:14px 16px}.slot-info .slot-time{font-size:14px;letter-spacing:-.3px}}
+
   /* ── Curriculum Tree ── */
   .curriculum-section{position:relative;z-index:2;padding:80px 24px;max-width:1200px;margin:0 auto}
   .curr-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:32px}
@@ -167,7 +196,7 @@
   .feat-card p{font-size:13px;color:var(--text-secondary);line-height:1.7}
 
   /* ── Testimonials Scroll ── */
-  .testi-section{position:relative;z-index:2;padding:80px 0;background:linear-gradient(180deg,var(--bg),var(--bg-alt),var(--bg));overflow:hidden}
+  .testi-section{position:relative;z-index:2;padding:80px 0;background:linear-gradient(180deg,var(--bg),#fce8e8,var(--bg));overflow:hidden}
   .testi-section .section-hdr{padding:0 24px}
   .testi-track-wrap{overflow:hidden;margin-top:40px}
   .testi-track{display:flex;gap:24px;animation:testiScroll 40s linear infinite;width:max-content}
@@ -192,9 +221,38 @@
   .faq-item.open .faq-a{max-height:300px}
   .faq-a-inner{padding:0 24px 20px;font-size:14px;color:var(--text-secondary);line-height:1.7}
 
+  /* ── Payment ── */
+  .payment-section{position:relative;z-index:2;max-width:1200px;margin:0 auto;padding:0 24px 100px}
+  .payment-wrap{display:grid;grid-template-columns:1fr 1fr;gap:0;background:var(--bg-white);border:1px solid var(--border);border-radius:28px;overflow:hidden;box-shadow:var(--shadow-xl)}
+  .payment-left{padding:52px 56px;display:flex;flex-direction:column;justify-content:center;background:linear-gradient(145deg,#f0fdf4,#eef5ff,#fff5f5)}
+  .payment-left .section-tag{margin-bottom:16px}
+  .payment-left h2{font-family:'Playfair Display',serif;font-size:clamp(26px,3vw,38px);font-weight:700;line-height:1.2;letter-spacing:-.5px;margin-bottom:16px}
+  .payment-left p{font-size:15px;color:var(--text-secondary);line-height:1.75;margin-bottom:32px;max-width:380px}
+  .payment-steps{display:flex;flex-direction:column;gap:14px;margin-bottom:36px}
+  .pay-step{display:flex;align-items:flex-start;gap:14px}
+  .pay-step-num{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-light));color:#fff;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 3px 10px var(--accent-glow)}
+  .pay-step-text strong{display:block;font-size:14px;font-weight:600;color:var(--text-primary);margin-bottom:2px}
+  .pay-step-text span{font-size:13px;color:var(--text-secondary)}
+  .payment-confirm{display:inline-flex;align-items:center;gap:10px;padding:14px 28px;background:linear-gradient(135deg,#25d366,#128c7e);color:#fff;border:none;border-radius:13px;font-size:14px;font-weight:600;font-family:'DM Sans';cursor:pointer;text-decoration:none;transition:all .4s cubic-bezier(.22,1,.36,1);box-shadow:0 4px 18px rgba(37,211,102,.3)}
+  .payment-confirm:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(37,211,102,.4)}
+  .payment-right{padding:52px 48px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;background:#fff;border-left:1px solid var(--border)}
+  .qr-frame{position:relative;padding:16px;background:#fff;border-radius:20px;box-shadow:0 8px 40px rgba(0,0,0,.1);border:1px solid var(--border)}
+  .qr-frame img{width:220px;height:220px;display:block;border-radius:12px}
+  .qr-frame::before{content:'';position:absolute;inset:-2px;border-radius:22px;background:linear-gradient(135deg,var(--accent),#3b82f6,#ef4444);z-index:-1;opacity:.3}
+  .qr-badge{display:flex;align-items:center;gap:8px;padding:8px 18px;background:var(--accent-bg);border:1px solid var(--accent-border);border-radius:100px;font-size:12px;font-weight:700;color:var(--accent);letter-spacing:.5px}
+  .qr-badge .dot{width:7px;height:7px;border-radius:50%;background:var(--accent-light);animation:dotPulse 2s ease-in-out infinite}
+  .qr-upi{text-align:center;padding:14px 20px;background:var(--bg-alt);border-radius:14px;border:1px solid var(--border);width:100%}
+  .qr-upi strong{display:block;font-size:10px;font-family:'DM Sans';text-transform:uppercase;letter-spacing:1.5px;color:var(--text-muted);margin-bottom:12px;font-weight:700}
+  .upi-providers{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+  .upi-chip{display:flex;flex-direction:column;align-items:center;gap:5px;cursor:default}
+  .upi-chip-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.12)}
+  .upi-chip span{font-size:10px;font-weight:600;color:var(--text-secondary);letter-spacing:.3px}
+  @media(max-width:960px){.payment-wrap{grid-template-columns:1fr}.payment-right{border-left:none;border-top:1px solid var(--border);padding:40px 36px}.payment-left{padding:40px 36px}}
+  @media(max-width:640px){.payment-section{padding:0 18px 72px}.payment-left{padding:28px 24px}.payment-right{padding:28px 24px}.qr-frame img{width:180px;height:180px}}
+
   /* ── CTA ── */
   .cta-wrap{position:relative;z-index:2;max-width:1200px;margin:0 auto 100px;padding:0 24px}
-  .cta-box{padding:56px;border-radius:26px;text-align:center;background:linear-gradient(135deg,#f0fdf4,#eff6ff);border:1px solid var(--accent-border);position:relative;overflow:hidden}
+  .cta-box{padding:56px;border-radius:26px;text-align:center;background:linear-gradient(135deg,#edfdf6,#e8f2ff,#fff0f0);border:1px solid var(--accent-border);position:relative;overflow:hidden}
   .cta-box::before{content:'';position:absolute;width:400px;height:400px;background:radial-gradient(circle,rgba(16,185,129,.08),transparent 70%);top:-200px;right:-80px;pointer-events:none}
   .cta-box h2{font-family:'Playfair Display',serif;font-size:clamp(26px,3.5vw,38px);font-weight:700;margin-bottom:14px;position:relative}
   .cta-box p{color:var(--text-secondary);font-size:16px;margin-bottom:30px;max-width:440px;margin-left:auto;margin-right:auto;line-height:1.7;position:relative}
@@ -213,36 +271,326 @@
   .fade-in{opacity:0;transform:translateY(28px);transition:all .7s cubic-bezier(.22,1,.36,1)}
   .fade-in.vis{opacity:1;transform:translateY(0)}
 
-  .mob-nav{display:none;position:fixed;inset:0;z-index:200;background:rgba(255,255,255,.97);backdrop-filter:blur(20px);flex-direction:column;align-items:center;justify-content:center;gap:24px}
-  .mob-nav.open{display:flex}
+  .mob-nav{display:flex;visibility:hidden;position:fixed;inset:0;z-index:200;background:rgba(255,255,255,.97);backdrop-filter:blur(20px);flex-direction:column;align-items:center;justify-content:center;gap:20px}
+  .mob-nav.open{visibility:visible}
   .mob-nav a{color:var(--text-primary);text-decoration:none;font-family:'Playfair Display',serif;font-size:26px;font-weight:600}
-  .mob-nav .x-btn{position:absolute;top:52px;right:24px;background:none;border:none;color:var(--text-primary);font-size:30px;cursor:pointer}
+  .mob-nav .x-btn{position:absolute;top:20px;right:20px;width:44px;height:44px;background:rgba(15,23,42,.06);border:1px solid var(--border);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--text-primary);cursor:pointer;transition:all .25s}
+  .mob-nav .x-btn:hover{background:var(--accent-bg);border-color:var(--accent-border);color:var(--accent)}
 
   @media(max-width:960px){
-    .hero{flex-direction:column;padding:140px 24px 60px;gap:40px}.hero-right{max-width:100%}
-    .courses-grid{grid-template-columns:1fr;max-width:480px;margin:0 auto}
+    .hero{flex-direction:column;align-items:stretch;padding:130px 24px 60px;gap:36px;overflow-x:clip}
+    .hero-left{width:100%;min-width:0;box-sizing:border-box}
+    .hero-right{width:100%;max-width:100%;min-width:0}
+    .hero h1{line-height:1.18;letter-spacing:-1px}
+    .hero-sub{max-width:100%;display:block}
+    .courses-grid{grid-template-columns:1fr;max-width:500px;margin:0 auto}
     .curr-grid{grid-template-columns:1fr}
-    .features-grid{grid-template-columns:1fr;max-width:380px;margin:0 auto}
-    .stats-inner{flex-direction:column;width:100%;max-width:340px}
-    .stat-item+.stat-item::before{display:none}.stat-item{padding:18px 28px}
+    .features-grid{grid-template-columns:1fr;max-width:500px;margin:0 auto}
+    .stats-bar{margin-top:32px}
+    .stats-inner{flex-direction:row;flex-wrap:wrap;width:100%;max-width:480px;justify-content:center}
+    .stat-item{flex:1;min-width:100px;padding:20px 16px}
+    .stat-item+.stat-item::before{display:block}
+    .footer-top{grid-template-columns:1fr 1fr;padding:40px 24px 30px;gap:28px}
+    .footer-bottom{padding:16px 24px}
+    .footer-connect-col{grid-column:1 / -1}
   }
   @media(max-width:640px){
-    header{padding:0 16px}nav a:not(.nav-cta){display:none}.mob-toggle{display:block}
-    .chart-canvas-wrap{height:200px}.card-body{padding:18px}
-    .cta-box{padding:36px 20px}.footer-inner{flex-direction:column;gap:16px}footer{padding:30px 20px}
-    .curr-card{padding:24px}
+    header{padding:0 16px;height:56px}
+    .ticker-bar{height:32px}
+    header{top:32px}
+    html{scroll-padding-top:96px}
+    nav a{display:none}.mob-toggle{display:block}
+    .currency-toggle{margin-right:8px}
+    .currency-toggle button{padding:5px 10px;font-size:11px;letter-spacing:0}
+    .chart-canvas-wrap{height:200px}
+    .chart-footer .cf-item{padding:10px 6px}
+    .chart-footer .cf-label{font-size:9px;letter-spacing:.5px}
+    .chart-footer .cf-val{font-size:12px}
+    .card-body{padding:16px}
+    .card-body h3{font-size:18px}
+    .cta-box{padding:32px 20px}
+    .curr-card{padding:20px}
+    .testi-card{width:290px;padding:22px}
+    .stat-num{font-size:24px}
+    .stats-bar{margin-top:28px}
+    .stats-inner{max-width:100%;border-radius:14px}
+    .stat-item{padding:16px 12px;min-width:80px}
+    .stat-item+.stat-item::before{top:18%;height:64%}
+    .hero{padding:106px 18px 50px;gap:28px;align-items:stretch;overflow-x:clip}
+    .hero-left{width:100%;min-width:0;box-sizing:border-box}
+    .hero-right{width:100%;max-width:100%;min-width:0}
+    .hero h1{letter-spacing:0px;font-size:clamp(30px,8.5vw,44px);line-height:1.2}
+    .hero-sub{font-size:15px;margin-top:16px;max-width:100%}
+    .chart-panel{box-shadow:var(--shadow-md)}
+    .tree-node span{font-size:13px}
+    .tree-leaf{font-size:11px}
+    .hero-actions{gap:10px}
+    .btn-primary,.btn-ghost{padding:13px 22px;font-size:13px;border-radius:11px}
+    .section{padding:60px 18px}
+    .section-hdr{margin-bottom:44px}
+    .curriculum-section{padding:60px 18px}
+    .features-grid{grid-template-columns:1fr;max-width:100%}
+    .feat-card{padding:24px}
+    .faq-section{padding:60px 18px}
+    .faq-q{font-size:14px;padding:16px 18px}
+    .faq-a-inner{padding:0 18px 16px;font-size:13px}
+    .footer-top{grid-template-columns:1fr 1fr;padding:32px 20px;gap:20px}
+    .footer-brand-col{grid-column:1 / -1}
+    .footer-brand-col p{max-width:100%}
+    .footer-connect-col{grid-column:1 / -1}
+    .footer-bottom{flex-direction:column;text-align:center;padding:16px 20px;gap:14px}
+    .footer-qr-card img{width:64px;height:64px}
+    .combo-ribbon{font-size:9px;padding:4px 36px;right:-28px}
+    .card-chips{gap:4px}
+    .chip{font-size:10px;padding:4px 8px}
+    .price-now{font-size:20px}
+    .cta-wrap{padding:0 16px;margin-bottom:60px}
   }
+  @media(max-width:400px){
+    .hero-actions{flex-direction:column;align-items:flex-start}
+    .btn-primary,.btn-ghost{width:100%;justify-content:center}
+    .stat-item+.stat-item::before{display:none}
+    .stats-inner{flex-direction:column;max-width:280px}
+    .stat-item{padding:14px 20px}
+  }
+
+  /* ── Scroll Progress Bar ── */
+  .scroll-progress{position:fixed;top:0;left:0;height:3px;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent-light),#3b82f6);z-index:400;transition:width .08s linear;pointer-events:none;border-radius:0 2px 2px 0}
+
+  /* ── Custom Scrollbar ── */
+  ::-webkit-scrollbar{width:5px}
+  ::-webkit-scrollbar-track{background:transparent}
+  ::-webkit-scrollbar-thumb{background:var(--accent-border);border-radius:10px}
+  ::-webkit-scrollbar-thumb:hover{background:var(--accent)}
+
+  /* ── Scroll anchor offset ── */
+  html{scroll-padding-top:112px}
+
+  /* ── Text overflow safety ── */
+  h1,h2,h3,h4,p,.desc,.qt,.faq-a-inner,.hero-sub,.tree-node span,.chip{overflow-wrap:break-word;word-break:break-word}
+
+  /* ── Directional animations ── */
+  .fade-left{opacity:0;transform:translateX(-36px);transition:all .75s cubic-bezier(.22,1,.36,1)}
+  .fade-right{opacity:0;transform:translateX(36px);transition:all .75s cubic-bezier(.22,1,.36,1)}
+  .scale-in{opacity:0;transform:scale(.93);transition:all .65s cubic-bezier(.22,1,.36,1)}
+  .fade-left.vis,.fade-right.vis,.scale-in.vis{opacity:1;transform:none}
+  [data-delay="1"]{transition-delay:.08s!important}
+  [data-delay="2"]{transition-delay:.16s!important}
+  [data-delay="3"]{transition-delay:.24s!important}
+  [data-delay="4"]{transition-delay:.32s!important}
+  [data-delay="5"]{transition-delay:.40s!important}
+
+  /* ── Header scrolled state ── */
+  header.header-scrolled{background:rgba(255,255,255,.97)!important;box-shadow:0 2px 20px rgba(0,0,0,.07)}
+  header{transition:background .3s,box-shadow .3s}
+
+  /* ── Mobile nav improvements ── */
+  .mob-nav{transition:opacity .3s ease,transform .3s cubic-bezier(.22,1,.36,1),visibility 0s .3s;opacity:0;transform:translateY(-12px);pointer-events:none}
+  .mob-nav.open{opacity:1;transform:none;pointer-events:all;transition:opacity .3s ease,transform .3s cubic-bezier(.22,1,.36,1),visibility 0s}
+  .mob-nav a,.mob-nav .mob-currency{opacity:0;transform:translateY(16px);transition:all .4s cubic-bezier(.22,1,.36,1)}
+  .mob-nav.open a,.mob-nav.open .mob-currency{opacity:1;transform:none}
+  .mob-nav.open a:nth-child(2){transition-delay:.08s}
+  .mob-nav.open a:nth-child(3){transition-delay:.13s}
+  .mob-nav.open a:nth-child(4){transition-delay:.18s}
+  .mob-nav.open a:nth-child(5){transition-delay:.23s}
+  .mob-nav.open .mob-currency{transition-delay:.28s}
+  .mob-nav.open a:nth-child(7){transition-delay:.34s}
+  .mob-nav .mob-currency{display:flex;background:#eef2f7;border:1.5px solid rgba(15,23,42,.09);border-radius:14px;padding:4px;gap:3px;margin-top:4px;box-shadow:inset 0 1px 4px rgba(0,0,0,.07)}
+  .mob-nav .mob-currency button{padding:9px 24px;font-size:13px;font-weight:700;font-family:'JetBrains Mono',monospace;border:none;cursor:pointer;background:transparent;color:var(--text-secondary);transition:all .28s cubic-bezier(.22,1,.36,1);border-radius:10px;display:flex;align-items:center;gap:5px}
+  .mob-nav .mob-currency button .csym{font-size:15px;font-weight:800;line-height:1;transition:transform .28s cubic-bezier(.22,1,.36,1)}
+  .mob-nav .mob-currency button.active{background:linear-gradient(135deg,var(--accent),var(--accent-light));color:#fff;box-shadow:0 3px 12px var(--accent-glow)}
+  .mob-nav .mob-currency button.active .csym{transform:scale(1.15)}
+  .mob-nav .mob-enroll{margin-top:8px;padding:14px 44px;background:linear-gradient(135deg,var(--accent),var(--accent-light));color:#fff;border-radius:13px;font-family:'DM Sans';font-weight:600;font-size:16px;box-shadow:0 4px 16px var(--accent-glow);text-decoration:none;display:inline-block}
+
+  /* ── Testimonial track masks ── */
+  .testi-track-wrap{-webkit-mask-image:linear-gradient(90deg,transparent 0%,#000 6%,#000 94%,transparent 100%);mask-image:linear-gradient(90deg,transparent 0%,#000 6%,#000 94%,transparent 100%)}
+  @media(max-width:640px){.testi-track-wrap{-webkit-mask-image:none;mask-image:none}}
+
+  /* ── Footer redesign ── */
+  footer{position:relative;z-index:2;background:#0f172a;padding:0}
+  .footer-top{max-width:1200px;margin:0 auto;padding:56px 60px 40px;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;border-bottom:1px solid rgba(255,255,255,.07)}
+  .footer-brand-col .footer-brand{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:#fff;display:flex;align-items:center;gap:10px;margin-bottom:14px}
+  .footer-brand-col .fm{width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,var(--accent),var(--accent-light));display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .footer-brand-col .fm svg{width:16px;height:16px}
+  .footer-brand-col p{font-size:13px;line-height:1.75;max-width:220px;color:#64748b}
+  .footer-col h5{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#cbd5e1;margin-bottom:16px}
+  .footer-col a{display:block;color:#64748b;text-decoration:none;font-size:13px;margin-bottom:10px;transition:color .25s,transform .25s;transform:translateX(0)}
+  .footer-col a:hover{color:var(--accent-light);transform:translateX(3px)}
+  .footer-bottom{max-width:1200px;margin:0 auto;padding:20px 60px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+  .footer-bottom p{font-size:12px;color:#475569}
+  .footer-social{display:flex;gap:8px}
+  .footer-social a{width:34px;height:34px;border-radius:9px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;color:#94a3b8;transition:all .3s;text-decoration:none}
+  .footer-social a:hover{background:var(--accent-bg);border-color:var(--accent-border);color:var(--accent-light);transform:translateY(-2px)}
+  .footer-social a svg{width:15px;height:15px}
+  /* ── Pay Modal ── */
+  .pay-modal{position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(15,23,42,.55);backdrop-filter:blur(8px);opacity:0;visibility:hidden;transition:opacity .3s,visibility 0s .3s}
+  .pay-modal.open{opacity:1;visibility:visible;transition:opacity .3s,visibility 0s}
+  /* desktop box */
+  .pay-modal-box{background:#fff;border-radius:24px;width:100%;max-width:620px;max-height:92vh;overflow-y:auto;box-shadow:0 30px 80px rgba(0,0,0,.22);transform:translateY(24px) scale(.97);transition:transform .38s cubic-bezier(.22,1,.36,1);display:flex;flex-direction:column}
+  .pay-modal.open .pay-modal-box{transform:translateY(0) scale(1)}
+  /* header */
+  .pay-modal-top{display:flex;justify-content:space-between;align-items:flex-start;padding:22px 24px 18px;border-bottom:1px solid var(--border)}
+  .pay-modal-header-info{flex:1}
+  .pay-modal-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-muted);margin-bottom:6px}
+  .pay-modal-course{display:inline-block;padding:6px 13px;background:var(--accent-bg);border:1px solid var(--accent-border);border-radius:8px;font-size:14px;font-weight:700;color:var(--accent)}
+  .pay-modal-time{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-muted);margin-top:6px}
+  .pay-modal-x{width:34px;height:34px;border-radius:9px;background:var(--bg-alt);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-secondary);transition:all .2s;flex-shrink:0;margin-left:12px}
+  .pay-modal-x:hover{background:var(--accent-bg);color:var(--accent);border-color:var(--accent-border)}
+  /* body — 2 col on desktop */
+  .pay-modal-body{display:grid;grid-template-columns:1fr 1fr;gap:0}
+  .pay-modal-qr-wrap{display:flex;flex-direction:column;align-items:center;gap:12px;padding:22px 20px;border-right:1px solid var(--border);background:linear-gradient(160deg,#f0fdf4,#eef5ff)}
+  .pay-modal-scan-hint{font-size:11px;font-weight:600;color:var(--text-secondary);letter-spacing:.4px;text-align:center}
+  .pay-modal-qr-frame{padding:10px;background:#fff;border-radius:14px;box-shadow:0 4px 20px rgba(0,0,0,.1);border:1px solid var(--border);position:relative}
+  .pay-modal-qr-frame::before{content:'';position:absolute;inset:-1px;border-radius:15px;background:linear-gradient(135deg,var(--accent),#3b82f6,#ef4444);z-index:-1;opacity:.22}
+  .pay-modal-qr-frame img{width:160px;height:160px;display:block;border-radius:8px}
+  .pay-modal-upi-row{display:flex;align-items:center;gap:8px}
+  .pay-upi-logo{width:30px;height:30px;object-fit:contain;border-radius:7px;border:1px solid var(--border);background:#fff}
+  .pay-upi-gpay{width:30px;height:30px;border-radius:7px;border:1px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center}
+  /* form side */
+  .pay-modal-right{display:flex;flex-direction:column;padding:22px 22px 20px}
+  .pay-modal-form{flex:1}
+  .pay-form-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-muted);margin-bottom:12px}
+  .pay-field{margin-bottom:11px}
+  .pay-field label{display:block;font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:5px}
+  .pay-field input{width:100%;padding:11px 13px;font-size:13px;font-family:'DM Sans';border:1.5px solid var(--border);border-radius:10px;background:var(--bg);color:var(--text-primary);outline:none;transition:border-color .2s,box-shadow .2s;min-height:44px}
+  .pay-field input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-bg)}
+  .pay-field input::placeholder{color:var(--text-muted)}
+  .pay-field input.error{border-color:#ef4444;box-shadow:0 0 0 3px rgba(239,68,68,.08)}
+  .pay-modal-actions{display:flex;gap:10px;margin-top:14px}
+  .pay-modal-cancel{padding:12px 16px;font-size:13px;font-weight:600;font-family:'DM Sans';background:var(--bg-alt);color:var(--text-secondary);border:1px solid var(--border);border-radius:11px;cursor:pointer;transition:all .25s;white-space:nowrap}
+  .pay-modal-cancel:hover{background:var(--border);color:var(--text-primary)}
+  .pay-modal-proceed{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 14px;font-size:13px;font-weight:600;font-family:'DM Sans';background:linear-gradient(135deg,#25d366,#128c7e);color:#fff;border:none;border-radius:11px;cursor:pointer;transition:all .4s cubic-bezier(.22,1,.36,1);box-shadow:0 4px 14px rgba(37,211,102,.3);line-height:1.3;text-align:center}
+  .pay-modal-proceed:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(37,211,102,.4)}
+  /* mobile — bottom sheet */
+  @media(max-width:600px){
+    .pay-modal{align-items:flex-end;padding:0}
+    .pay-modal-box{max-width:100%;border-radius:22px 22px 0 0;transform:translateY(100%);max-height:94vh}
+    .pay-modal.open .pay-modal-box{transform:translateY(0)}
+    .pay-modal-body{grid-template-columns:1fr}
+    .pay-modal-qr-wrap{flex-direction:row;flex-wrap:wrap;justify-content:center;gap:10px;padding:16px 20px;border-right:none;border-bottom:1px solid var(--border)}
+    .pay-modal-qr-frame img{width:110px;height:110px}
+    .pay-modal-right{padding:16px 20px 20px}
+    .pay-modal-actions{flex-direction:column}
+    .pay-modal-cancel{text-align:center}
+  }
+
+  /* ── Screenshot Upload ── */
+  .pay-upload-wrap{border:2px dashed rgba(15,23,42,.15);border-radius:10px;min-height:68px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .25s;overflow:hidden;position:relative;background:var(--bg)}
+  .pay-upload-wrap:hover,.pay-upload-wrap:focus{border-color:var(--accent);background:var(--accent-bg);outline:none}
+  .pay-upload-wrap.has-file{border-style:solid;border-color:var(--accent-border);background:#fff}
+  .pay-upload-placeholder{display:flex;flex-direction:column;align-items:center;gap:5px;padding:12px;color:var(--text-muted);pointer-events:none}
+  .pay-upload-placeholder svg{width:20px;height:20px;color:var(--accent)}
+  .pay-upload-placeholder span{font-size:11.5px;font-weight:500;text-align:center;line-height:1.4}
+  .pay-upload-preview{width:100%;max-height:88px;object-fit:cover;display:none;border-radius:8px}
+  .pay-upload-change{position:absolute;bottom:6px;right:8px;font-size:10px;font-weight:600;color:var(--accent);background:rgba(255,255,255,.92);padding:2px 8px;border-radius:5px;display:none;pointer-events:none;box-shadow:0 1px 4px rgba(0,0,0,.1)}
+
+  /* ── Toast ── */
+  .pay-toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(16px);background:#0f172a;color:#fff;font-size:13px;font-weight:500;padding:12px 22px;border-radius:13px;z-index:9999;opacity:0;transition:opacity .3s cubic-bezier(.22,1,.36,1),transform .3s cubic-bezier(.22,1,.36,1);pointer-events:none;white-space:normal;max-width:min(88vw,380px);text-align:center;box-shadow:0 8px 30px rgba(0,0,0,.3);line-height:1.45}
+  .pay-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  /* ── Footer QR cards ── */
+  .footer-qr-row{display:flex;gap:12px;margin-top:10px}
+  .footer-qr-card{display:flex;flex-direction:column;align-items:center;gap:7px;text-decoration:none;transition:transform .25s}
+  .footer-qr-card:hover{transform:translateY(-3px)}
+  .footer-qr-card img{width:80px;height:80px;object-fit:contain;border-radius:10px;background:#fff;padding:5px;display:block;box-shadow:0 2px 12px rgba(0,0,0,.25)}
+  .footer-qr-card span{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#64748b}
 </style>
 </head>
 <body>
+<div class="scroll-progress" id="scrollProgress"></div>
+<div class="pay-toast" id="payToast"></div>
+
+<!-- Pay Modal -->
+<div class="pay-modal" id="payModal" onclick="if(event.target===this)closePayModal()">
+  <div class="pay-modal-box">
+
+    <!-- Header -->
+    <div class="pay-modal-top">
+      <div class="pay-modal-header-info">
+        <p class="pay-modal-label">Enrolling in</p>
+        <span class="pay-modal-course" id="payModalCourse">Course</span>
+        <p class="pay-modal-time" id="payModalTime"></p>
+      </div>
+      <button class="pay-modal-x" onclick="closePayModal()" aria-label="Close">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 3L3 15M3 3l12 12"/></svg>
+      </button>
+    </div>
+
+    <!-- Body: QR left + Form right -->
+    <div class="pay-modal-body">
+
+      <!-- QR col -->
+      <div class="pay-modal-qr-wrap">
+        <p class="pay-modal-scan-hint">Scan &amp; Pay via any UPI app</p>
+        <div class="pay-modal-qr-frame">
+          <img src="payment.png" alt="Payment QR">
+        </div>
+        <div class="pay-modal-upi-row">
+          <img src="phonepe.png" alt="PhonePe" class="pay-upi-logo">
+          <img src="paytm.png" alt="Paytm" class="pay-upi-logo">
+          <img src="bhim.png" alt="BHIM" class="pay-upi-logo">
+          <div class="pay-upi-gpay"><svg width="18" height="18" viewBox="0 0 48 48"><path fill="#4285F4" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.08 17.74 9.5 24 9.5z"/><path fill="#34A853" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#EA4335" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-3.59-13.46-8.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg></div>
+        </div>
+      </div>
+
+      <!-- Form col -->
+      <div class="pay-modal-right">
+        <div class="pay-modal-form">
+          <p class="pay-form-title">Your Details</p>
+          <div class="pay-field">
+            <label>Full Name</label>
+            <input type="text" id="payName" placeholder="Enter your full name" autocomplete="name">
+          </div>
+          <div class="pay-field">
+            <label>Email Address</label>
+            <input type="email" id="payEmail" placeholder="Enter your email" autocomplete="email">
+          </div>
+          <div class="pay-field">
+            <label>Mobile Number</label>
+            <input type="tel" id="payMobile" placeholder="Enter your mobile number" autocomplete="tel">
+          </div>
+          <div class="pay-field">
+            <label>Payment Screenshot <span style="color:var(--text-muted);font-weight:400;font-size:11px">(Optional)</span></label>
+            <div class="pay-upload-wrap" id="payUploadWrap" role="button" tabindex="0"
+              onclick="document.getElementById('payScreenshot').click()"
+              onkeydown="if(event.key==='Enter'||event.key===' ')document.getElementById('payScreenshot').click()">
+              <input type="file" id="payScreenshot" accept="image/*" style="display:none" onchange="handleScreenshotUpload(this)">
+              <div class="pay-upload-placeholder" id="payUploadPlaceholder">
+                <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                <span>Tap to upload payment screenshot</span>
+              </div>
+              <img id="payScreenshotPreview" class="pay-upload-preview" alt="Payment screenshot">
+              <span class="pay-upload-change" id="payUploadChange">Tap to change</span>
+            </div>
+          </div>
+        </div>
+        <div class="pay-modal-actions">
+          <button class="pay-modal-cancel" onclick="closePayModal()">Cancel</button>
+          <button class="pay-modal-proceed" onclick="submitPayModal()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            Share Proof on WhatsApp
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
 
 <div class="mob-nav" id="mobNav">
-  <button class="x-btn" onclick="document.getElementById('mobNav').classList.remove('open')">&times;</button>
-  <a href="#" onclick="this.parentElement.classList.remove('open')">Home</a>
-  <a href="#courses" onclick="this.parentElement.classList.remove('open')">Courses</a>
-  <a href="#curriculum" onclick="this.parentElement.classList.remove('open')">Curriculum</a>
-  <a href="#faq" onclick="this.parentElement.classList.remove('open')">FAQ</a>
-  <a href="https://docs.google.com/forms/" target="_blank">Contact</a>
+  <button class="x-btn" onclick="closeMobNav()" aria-label="Close menu">
+    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+  </button>
+  <a href="#" onclick="closeMobNav()">Home</a>
+  <a href="#courses" onclick="closeMobNav()">Courses</a>
+  <a href="#curriculum" onclick="closeMobNav()">Learn</a>
+  <a href="#faq" onclick="closeMobNav()">FAQ</a>
+  <div class="mob-currency" id="mobCurrencyToggle">
+    <button class="active" data-cur="INR" onclick="mobCurSwitch(this)"><span class="csym">₹</span>INR</button>
+    <button data-cur="USD" onclick="mobCurSwitch(this)"><span class="csym">$</span>USD</button>
+  </div>
+  <a href="https://docs.google.com/forms/" target="_blank" onclick="closeMobNav()" class="mob-enroll">Contact Us</a>
 </div>
 
 <!-- Ticker -->
@@ -256,8 +604,8 @@
   </div>
   <div class="header-right">
     <div class="currency-toggle" id="currencyToggle">
-      <button class="active" data-cur="INR">₹ INR</button>
-      <button data-cur="USD">$ USD</button>
+      <button class="active" data-cur="INR"><span class="csym">₹</span>INR</button>
+      <button data-cur="USD"><span class="csym">$</span>USD</button>
     </div>
     <nav>
       <a href="#">Home</a>
@@ -266,7 +614,7 @@
       <a href="#faq">FAQ</a>
       <a href="https://docs.google.com/forms/" target="_blank" class="nav-cta">Contact</a>
     </nav>
-    <button class="mob-toggle" onclick="document.getElementById('mobNav').classList.add('open')">
+    <button class="mob-toggle" onclick="openMobNav()" aria-label="Open menu">
       <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
     </button>
   </div>
@@ -274,9 +622,11 @@
 
 <!-- Hero -->
 <section class="hero">
+  <canvas class="hero-bg-canvas" id="heroBgCanvas" aria-hidden="true"></canvas>
+  <div class="hero-bottom-fade" aria-hidden="true"></div>
   <div class="hero-left">
     <div class="hero-badge"><span class="pulse"></span> Live Markets Open Now</div>
-    <h1>Master the<br><em>Art of Trading</em></h1>
+    <h1>Trade Smarter,<br><em>Build Wealth</em></h1>
     <p class="hero-sub">Professional Forex & Stock Market courses with real-world strategies, live chart analysis, and expert mentorship.</p>
     <div class="hero-actions">
       <button class="btn-primary" onclick="document.getElementById('courses').scrollIntoView({behavior:'smooth'})">Explore Courses <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10m0 0l-3-3m3 3l-3 3"/></svg></button>
@@ -326,7 +676,7 @@
   <div class="courses-grid">
 
     <!-- Forex -->
-    <div class="course-card fade-in" data-course="Forex Trading">
+    <div class="course-card fade-in" data-delay="1" data-course="Forex Trading">
       <div class="card-visual">
         <div class="card-bg forex"></div>
         <div class="card-icon-big"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="9" r="7"/><circle cx="15" cy="15" r="7"/><path d="M8 7h2m-2 2h2m2 4h2m-2 2h2"/></svg></div>
@@ -344,7 +694,7 @@
         </div>
         <div class="card-bottom">
           <div class="price-block">
-            <div class="price-row"><span class="price-now" data-inr="2999" data-usd="35">₹2,999</span><span class="price-was" data-inr="5999" data-usd="72">₹5,999</span></div>
+            <div class="price-row"><span class="price-now" data-inr="2999" data-usd="30">₹2,999</span><span class="price-was" data-inr="5999" data-usd="60">₹5,999</span></div>
             <span class="discount-tag">50% OFF</span>
           </div>
           <button class="btn-enroll buy">Enroll <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m0 0l-5-5m5 5l-5 5"/></svg></button>
@@ -353,7 +703,7 @@
     </div>
 
     <!-- Stock -->
-    <div class="course-card fade-in" data-course="Stock Trading">
+    <div class="course-card fade-in" data-delay="2" data-course="Stock Trading">
       <div class="card-visual">
         <div class="card-bg stock"></div>
         <div class="card-icon-big"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18"/><path d="M7 16l4-4 4 4 5-6"/></svg></div>
@@ -371,7 +721,7 @@
         </div>
         <div class="card-bottom">
           <div class="price-block">
-            <div class="price-row"><span class="price-now" data-inr="3999" data-usd="48">₹3,999</span><span class="price-was" data-inr="7999" data-usd="96">₹7,999</span></div>
+            <div class="price-row"><span class="price-now" data-inr="3999" data-usd="40">₹3,999</span><span class="price-was" data-inr="7999" data-usd="80">₹7,999</span></div>
             <span class="discount-tag">50% OFF</span>
           </div>
           <button class="btn-enroll buy">Enroll <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m0 0l-5-5m5 5l-5 5"/></svg></button>
@@ -380,7 +730,7 @@
     </div>
 
     <!-- Combo -->
-    <div class="course-card combo fade-in" data-course="Combo Course (Forex + Stock)">
+    <div class="course-card combo fade-in" data-delay="3" data-course="Combo Course (Forex + Stock)">
       <div class="combo-ribbon">BEST VALUE</div>
       <div class="card-visual">
         <div class="card-bg combo-bg"></div>
@@ -399,7 +749,7 @@
         </div>
         <div class="card-bottom">
           <div class="price-block">
-            <div class="price-row"><span class="price-now" data-inr="5999" data-usd="72">₹5,999</span><span class="price-was" data-inr="13998" data-usd="168">₹13,998</span></div>
+            <div class="price-row"><span class="price-now" data-inr="5999" data-usd="60">₹5,999</span><span class="price-was" data-inr="13998" data-usd="140">₹13,998</span></div>
             <span class="discount-tag">57% OFF</span>
           </div>
           <button class="btn-enroll buy">Enroll <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m0 0l-5-5m5 5l-5 5"/></svg></button>
@@ -408,6 +758,51 @@
     </div>
   </div>
 </section>
+
+<!-- Schedule -->
+<div class="schedule-section fade-in">
+  <div class="schedule-wrap">
+    <div class="schedule-label">
+      <div class="days-badge">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+        Sat &amp; Sun Only
+      </div>
+      <h3>Live Class Schedule</h3>
+      <p>Weekend batches · IST timezone</p>
+      <div class="schedule-platforms">
+        <span class="platform-pill">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#00897B"/><path d="M15.5 8.5H17a1 1 0 011 1v5a1 1 0 01-1 1h-1.5V8.5z" fill="#fff"/><rect x="6" y="7" width="10" height="10" rx="1.5" fill="#fff"/></svg>
+          Google Meet
+        </span>
+        <span class="platform-pill">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#2D8CFF"/><path d="M5 8.5h8.5A1.5 1.5 0 0115 10v4a1.5 1.5 0 01-1.5 1.5H5A1.5 1.5 0 013.5 14v-4A1.5 1.5 0 015 8.5z" fill="#fff"/><path d="M15 11.2l4-2.7v7l-4-2.7v-1.6z" fill="#fff"/></svg>
+          Zoom
+        </span>
+      </div>
+    </div>
+    <div class="schedule-divider"></div>
+    <div class="schedule-slots">
+      <div class="slot-card">
+        <div class="slot-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l3 3"/></svg>
+        </div>
+        <div class="slot-info">
+          <div class="slot-time">8:00 PM – 9:00 PM</div>
+          <div class="slot-meta">Batch 1 · Evening</div>
+        </div>
+      </div>
+      <div class="slot-card">
+        <div class="slot-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l3 3"/></svg>
+        </div>
+        <div class="slot-info">
+          <div class="slot-time">10:00 PM – 11:00 PM</div>
+          <div class="slot-meta">Batch 2 · Night</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- Curriculum Tree -->
 <section class="curriculum-section" id="curriculum">
@@ -467,9 +862,9 @@
 <section class="section" id="features">
   <div class="section-hdr fade-in"><span class="section-tag">Why TheFinFlix</span><h2>Built for Serious Traders</h2><p>Everything you need to go from zero to profitable.</p></div>
   <div class="features-grid">
-    <div class="feat-card fade-in"><div class="feat-icon"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></div><h4>Live Chart Analysis</h4><p>Trade alongside your mentor reading real candlestick charts with live market data and instant signals.</p></div>
-    <div class="feat-card fade-in"><div class="feat-icon"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 12c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg></div><h4>Risk Management</h4><p>Battle-tested frameworks that protect your capital and keep you profitable in volatile markets.</p></div>
-    <div class="feat-card fade-in"><div class="feat-icon"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg></div><h4>Private Community</h4><p>Join dedicated traders sharing insights, trade setups, and daily market opportunities.</p></div>
+    <div class="feat-card fade-in" data-delay="1"><div class="feat-icon"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></div><h4>Live Chart Analysis</h4><p>Trade alongside your mentor reading real candlestick charts with live market data and instant signals.</p></div>
+    <div class="feat-card fade-in" data-delay="2"><div class="feat-icon"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 12c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg></div><h4>Risk Management</h4><p>Battle-tested frameworks that protect your capital and keep you profitable in volatile markets.</p></div>
+    <div class="feat-card fade-in" data-delay="3"><div class="feat-icon"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg></div><h4>Private Community</h4><p>Join dedicated traders sharing insights, trade setups, and daily market opportunities.</p></div>
   </div>
 </section>
 
@@ -502,12 +897,133 @@
   </div>
 </div>
 
+<!-- Payment -->
+<div class="payment-section fade-in" id="payment">
+  <div class="payment-wrap">
+    <div class="payment-left">
+      <span class="section-tag">Payment</span>
+      <h2>Simple &amp; Secure<br>Enrollment</h2>
+      <p>Scan the QR code to pay instantly via UPI. Once payment is done, share the screenshot on WhatsApp — you'll get access within 24 hours.</p>
+      <div class="payment-steps">
+        <div class="pay-step">
+          <div class="pay-step-num">1</div>
+          <div class="pay-step-text">
+            <strong>Choose Your Course</strong>
+            <span>Pick Forex, Stock, or Combo from the courses above</span>
+          </div>
+        </div>
+        <div class="pay-step">
+          <div class="pay-step-num">2</div>
+          <div class="pay-step-text">
+            <strong>Scan &amp; Pay via UPI</strong>
+            <span>Use any UPI app — GPay, PhonePe, Paytm, BHIM</span>
+          </div>
+        </div>
+        <div class="pay-step">
+          <div class="pay-step-num">3</div>
+          <div class="pay-step-text">
+            <strong>Send Screenshot on WhatsApp</strong>
+            <span>Share payment proof to confirm your enrollment</span>
+          </div>
+        </div>
+        <div class="pay-step">
+          <div class="pay-step-num">4</div>
+          <div class="pay-step-text">
+            <strong>Get Instant Access</strong>
+            <span>Receive course link &amp; community invite within 24 hrs</span>
+          </div>
+        </div>
+      </div>
+      <a href="https://wa.me/918081240527?text=I%20have%20completed%20the%20payment%20for%20the%20course" target="_blank" class="payment-confirm">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Confirm Payment on WhatsApp
+      </a>
+    </div>
+    <div class="payment-right">
+      <div class="qr-badge"><span class="dot"></span> Scan to Pay Instantly</div>
+      <div class="qr-frame">
+        <img src="payment.png" alt="Payment QR Code">
+      </div>
+      <div class="qr-upi">
+        <strong>UPI Accepted</strong>
+        <div class="upi-providers">
+          <!-- GPay -->
+          <div class="upi-chip">
+            <div class="upi-chip-icon" style="background:#fff;border:1px solid #e8eaed">
+              <svg width="28" height="28" viewBox="0 0 48 48"><path fill="#4285F4" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.08 17.74 9.5 24 9.5z"/><path fill="#34A853" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#EA4335" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-3.59-13.46-8.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/><path fill="none" d="M0 0h48v48H0z"/></svg>
+            </div>
+            <span>GPay</span>
+          </div>
+          <!-- PhonePe -->
+          <div class="upi-chip">
+            <div class="upi-chip-icon" style="background:#fff;padding:0;overflow:hidden">
+              <img src="phonepe.png" alt="PhonePe" style="width:44px;height:44px;object-fit:contain;border-radius:12px;display:block">
+            </div>
+            <span>PhonePe</span>
+          </div>
+          <!-- Paytm -->
+          <div class="upi-chip">
+            <div class="upi-chip-icon" style="background:#fff;padding:0;overflow:hidden">
+              <img src="paytm.png" alt="Paytm" style="width:44px;height:44px;object-fit:contain;border-radius:12px;display:block">
+            </div>
+            <span>Paytm</span>
+          </div>
+          <!-- BHIM -->
+          <div class="upi-chip">
+            <div class="upi-chip-icon" style="background:#fff;padding:0;overflow:hidden">
+              <img src="bhim.png" alt="BHIM" style="width:44px;height:44px;object-fit:contain;border-radius:12px;display:block">
+            </div>
+            <span>BHIM</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Footer -->
 <footer>
-  <div class="footer-inner">
-    <div class="footer-brand"><div class="fm"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="M3 17l6-6 4 4 8-8"/></svg></div> TheFinFlix</div>
-    <p>&copy; 2026 TheFinFlix. All Rights Reserved.</p>
-    <div class="footer-links"><a href="#">Privacy</a><a href="#">Terms</a><a href="https://docs.google.com/forms/" target="_blank">Contact</a></div>
+  <div class="footer-top">
+    <div class="footer-brand-col">
+      <div class="footer-brand">
+        <div class="fm"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></div>
+        TheFinFlix
+      </div>
+      <p>Professional trading education for the modern trader. Learn Forex & Stock markets with real strategies, live sessions, and expert mentorship.</p>
+    </div>
+    <div class="footer-col">
+      <h5>Courses</h5>
+      <a href="#courses">Forex Trading Mastery</a>
+      <a href="#courses">Stock Market Pro</a>
+      <a href="#courses">Forex + Stock Combo</a>
+      <a href="#curriculum">Curriculum</a>
+    </div>
+    <div class="footer-col">
+      <h5>Company</h5>
+      <a href="#">About Us</a>
+      <a href="#faq">FAQ</a>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Use</a>
+    </div>
+    <div class="footer-col footer-connect-col">
+      <h5>Connect</h5>
+      <a href="https://docs.google.com/forms/" target="_blank">Contact Us</a>
+      <a href="mailto:thefinflix@gmail.com">thefinflix@gmail.com</a>
+      <div class="footer-social" style="margin:10px 0 4px">
+        <a href="https://wa.me/918081240527" target="_blank" aria-label="WhatsApp">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        </a>
+        <a href="https://t.me/THEFINFLIX_TRADE" target="_blank" aria-label="Telegram">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.96 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+        </a>
+        <a href="https://www.instagram.com/thefinflix.trade" target="_blank" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; 2026 TheFinFlix. All rights reserved. Trading involves risk.</p>
   </div>
 </footer>
 
@@ -516,13 +1032,41 @@
 let curCur='INR';
 const togBtns=document.querySelectorAll('#currencyToggle button');
 const fmt=(v,c)=>c==='INR'?'₹'+Number(v).toLocaleString('en-IN'):'$'+Number(v).toLocaleString('en-US');
+
 function updatePrices(c){
-  curCur=c;const k=c.toLowerCase();
-  document.querySelectorAll('.price-now').forEach(e=>e.textContent=fmt(e.dataset[k],c));
-  document.querySelectorAll('.price-was').forEach(e=>e.textContent=fmt(e.dataset[k],c));
-  const cp=document.querySelector('.cta-price');if(cp)cp.textContent=fmt(c==='INR'?2999:35,c);
+  curCur=c;
+  const k=c.toLowerCase();
+
+  // Update each card: price-now, price-was, and recalculate discount %
+  document.querySelectorAll('.price-block').forEach(block=>{
+    const nowEl=block.querySelector('.price-now');
+    const wasEl=block.querySelector('.price-was');
+    const tagEl=block.querySelector('.discount-tag');
+    if(!nowEl||!wasEl) return;
+    const nowVal=Number(nowEl.dataset[k]);
+    const wasVal=Number(wasEl.dataset[k]);
+    nowEl.textContent=fmt(nowVal,c);
+    wasEl.textContent=fmt(wasVal,c);
+    if(tagEl&&wasVal>0){
+      const pct=Math.round((1-(nowVal/wasVal))*100);
+      tagEl.textContent=pct+'% OFF';
+    }
+  });
+
+  // CTA button price — always shows the lowest (Forex) course price
+  const ctaEl=document.querySelector('.cta-price');
+  if(ctaEl){
+    const forexNow=document.querySelector('.price-now[data-inr="2999"]');
+    if(forexNow) ctaEl.textContent=fmt(Number(forexNow.dataset[k]),c);
+  }
+
+  // Sync both toggles visual state
+  document.querySelectorAll('#currencyToggle button, #mobCurrencyToggle button').forEach(b=>{
+    b.classList.toggle('active', b.dataset.cur===c);
+  });
 }
-togBtns.forEach(b=>b.addEventListener('click',()=>{togBtns.forEach(x=>x.classList.remove('active'));b.classList.add('active');updatePrices(b.dataset.cur)}));
+
+togBtns.forEach(b=>b.addEventListener('click',()=>updatePrices(b.dataset.cur)));
 
 /* ── Ticker ── */
 const ticks=[{s:'EUR/USD',p:'1.0847',c:'+0.32%',u:1},{s:'GBP/USD',p:'1.2634',c:'+0.18%',u:1},{s:'USD/JPY',p:'154.23',c:'-0.14%',u:0},{s:'AAPL',p:'$198.45',c:'+1.24%',u:1},{s:'TSLA',p:'$241.80',c:'-0.67%',u:0},{s:'GOOGL',p:'$176.32',c:'+0.89%',u:1},{s:'BTC/USD',p:'$68,420',c:'+2.1%',u:1},{s:'USD/INR',p:'₹83.42',c:'+0.08%',u:1},{s:'NIFTY 50',p:'₹22,480',c:'+0.56%',u:1},{s:'SENSEX',p:'₹73,890',c:'+0.41%',u:1}];
@@ -573,7 +1117,43 @@ function drawMini(canvas,seed){
   ctx.beginPath();ctx.moveTo(0,H);pts.forEach((p,i)=>ctx.lineTo(i*(W/(pts.length-1)),yOf(p)));ctx.lineTo(W,H);ctx.closePath();ctx.fillStyle=g;ctx.fill();
   ctx.beginPath();pts.forEach((p,i)=>{const x=i*(W/(pts.length-1));i===0?ctx.moveTo(x,yOf(p)):ctx.lineTo(x,yOf(p))});ctx.strokeStyle='rgba(255,255,255,.7)';ctx.lineWidth=1.5;ctx.stroke();
 }
-function initCharts(){drawCandlestick(document.getElementById('heroChart'));document.querySelectorAll('.card-mini-chart').forEach((c,i)=>drawMini(c,i+1))}
+/* ── Hero Background Canvas ── */
+function drawHeroBg(){
+  const canvas=document.getElementById('heroBgCanvas');
+  if(!canvas)return;
+  const dpr=devicePixelRatio||1,W=canvas.offsetWidth,H=canvas.offsetHeight;
+  if(!W||!H)return;
+  canvas.width=W*dpr;canvas.height=H*dpr;
+  const ctx=canvas.getContext('2d');ctx.scale(dpr,dpr);
+  const N=60,cw=W/N,candles=[];let p=50;
+  for(let i=0;i<N;i++){const o=p,ch=(Math.random()-.46)*4,c=Math.max(5,Math.min(95,o+ch));candles.push({o,c,h:Math.min(Math.max(o,c)+Math.random()*2.5,98),l:Math.max(Math.min(o,c)-Math.random()*2.5,2)});p=c;}
+  const maxP=Math.max(...candles.map(c=>c.h)),minP=Math.min(...candles.map(c=>c.l)),range=maxP-minP||1;
+  const padT=H*.12,padB=H*.22,chartH=H-padT-padB;
+  const yOf=v=>padT+(1-(v-minP)/range)*chartH;
+  /* dashed horizontal levels */
+  ctx.setLineDash([3,9]);
+  for(let i=0;i<=5;i++){const y=padT+i*(chartH/5);ctx.strokeStyle='rgba(16,185,129,.07)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+  ctx.setLineDash([]);
+  /* volume bars */
+  candles.forEach((c,i)=>{const bull=c.c>=c.o,vol=.15+Math.random()*.25;ctx.fillStyle=bull?'rgba(16,185,129,.06)':'rgba(239,68,68,.04)';ctx.fillRect(i*cw+cw*.1,H-padB*vol,cw*.8,padB*vol);});
+  /* wicks */
+  candles.forEach((c,i)=>{const bull=c.c>=c.o,x=i*cw+cw/2;ctx.strokeStyle=bull?'rgba(16,185,129,.18)':'rgba(239,68,68,.12)';ctx.lineWidth=.8;ctx.beginPath();ctx.moveTo(x,yOf(c.h));ctx.lineTo(x,yOf(c.l));ctx.stroke();});
+  /* bodies */
+  candles.forEach((c,i)=>{const bull=c.c>=c.o,x=i*cw,bT=yOf(Math.max(c.o,c.c)),bH=Math.max(1,Math.abs(yOf(c.o)-yOf(c.c)));
+    if(bull){ctx.strokeStyle='rgba(16,185,129,.22)';ctx.lineWidth=.8;ctx.strokeRect(x+cw*.15,bT,cw*.7,bH);}
+    else{ctx.fillStyle='rgba(239,68,68,.09)';ctx.fillRect(x+cw*.15,bT,cw*.7,bH);ctx.strokeStyle='rgba(239,68,68,.16)';ctx.lineWidth=.8;ctx.strokeRect(x+cw*.15,bT,cw*.7,bH);}
+  });
+  /* MA9 – green */
+  ctx.beginPath();ctx.strokeStyle='rgba(16,185,129,.28)';ctx.lineWidth=1.5;
+  for(let i=9;i<N;i++){let s=0;for(let j=i-9;j<i;j++)s+=candles[j].c;const x=i*cw+cw/2,y=yOf(s/9);i===9?ctx.moveTo(x,y):ctx.lineTo(x,y);}ctx.stroke();
+  /* MA21 – teal */
+  ctx.beginPath();ctx.strokeStyle='rgba(20,184,166,.2)';ctx.lineWidth=1;
+  for(let i=21;i<N;i++){let s=0;for(let j=i-21;j<i;j++)s+=candles[j].c;const x=i*cw+cw/2,y=yOf(s/21);i===21?ctx.moveTo(x,y):ctx.lineTo(x,y);}ctx.stroke();
+  /* current-price line */
+  const last=candles[N-1],ly=yOf(last.c);
+  ctx.strokeStyle='rgba(16,185,129,.3)';ctx.lineWidth=1;ctx.setLineDash([6,6]);ctx.beginPath();ctx.moveTo(0,ly);ctx.lineTo(W,ly);ctx.stroke();ctx.setLineDash([]);
+}
+function initCharts(){drawCandlestick(document.getElementById('heroChart'));document.querySelectorAll('.card-mini-chart').forEach((c,i)=>drawMini(c,i+1));drawHeroBg();}
 addEventListener('load',initCharts);addEventListener('resize',initCharts);
 
 /* ── Live price ── */
@@ -581,14 +1161,255 @@ let cp=1.0847;
 setInterval(()=>{cp+=(Math.random()-.48)*.0004;const e=document.getElementById('livePrice');e.textContent=cp.toFixed(4);e.style.color=cp>=1.0847?'#16a34a':'#ef4444'},2000);
 
 /* ── Buy ── */
-document.querySelectorAll('.buy').forEach(b=>b.onclick=function(){const c=this.closest('.course-card').dataset.course;window.open(`https://wa.me/918081240527?text=I%20want%20to%20buy%20${encodeURIComponent(c)}`,'_blank')});
+/* ── Enroll → Payment Modal ── */
+function closePayModal(){
+  document.getElementById('payModal').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+function handleScreenshotUpload(input){
+  if(input.files&&input.files[0]){
+    const r=new FileReader();
+    r.onload=function(e){
+      const preview=document.getElementById('payScreenshotPreview');
+      const placeholder=document.getElementById('payUploadPlaceholder');
+      const change=document.getElementById('payUploadChange');
+      preview.src=e.target.result;
+      preview.style.display='block';
+      placeholder.style.display='none';
+      change.style.display='block';
+      document.getElementById('payUploadWrap').classList.add('has-file');
+    };
+    r.readAsDataURL(input.files[0]);
+  }
+}
+
+function showPayToast(msg,dur){
+  dur=dur||3800;
+  const t=document.getElementById('payToast');
+  t.textContent=msg;
+  t.classList.add('show');
+  clearTimeout(t._tid);
+  t._tid=setTimeout(()=>t.classList.remove('show'),dur);
+}
+
+async function submitPayModal(){
+  const name=document.getElementById('payName').value.trim();
+  const email=document.getElementById('payEmail').value.trim();
+  const mobile=document.getElementById('payMobile').value.trim();
+  let valid=true;
+  ['payName','payEmail','payMobile'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(!el.value.trim()){el.classList.add('error');valid=false;}
+    else el.classList.remove('error');
+  });
+  if(!valid){document.getElementById('payName').focus();return;}
+
+  const course=document.getElementById('payModalCourse').textContent;
+  const time=document.getElementById('payModalTime').textContent;
+  const screenshotInput=document.getElementById('payScreenshot');
+  const hasScreenshot=screenshotInput.files&&screenshotInput.files[0];
+
+  /* ── Build WhatsApp message ── */
+  const msg=
+`*Course Enrollment - TheFinFlix*
+
+*Course:* ${course}
+*Date & Time:* ${time}
+
+*Student Details*
+Name: ${name}
+Email: ${email}
+Mobile: ${mobile}
+
+Payment done. Please confirm my enrollment.`;
+  const waUrl=`https://wa.me/918081240527?text=${encodeURIComponent(msg)}`;
+
+  /* ── Save to Firebase (Firestore + Storage) first ── */
+  const proceedBtn=document.querySelector('.pay-modal-proceed');
+  const origHtml=proceedBtn.innerHTML;
+  proceedBtn.disabled=true;
+  proceedBtn.innerHTML='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg> Saving...';
+
+  try{
+    const saveFn=window._fbSaveEnrollment;
+    if(typeof saveFn==='function'){
+      await saveFn({
+        name, email, mobile, course,
+        enrolled_at: time,
+        screenshotFile: hasScreenshot ? screenshotInput.files[0] : null
+      });
+    }
+
+    /* ── Saved — now open WhatsApp ── */
+    closePayModal();
+
+    if(hasScreenshot){
+      const file=screenshotInput.files[0];
+      /* Mobile: native share sheet */
+      if(navigator.canShare&&navigator.canShare({files:[file]})){
+        try{
+          await navigator.share({title:'Payment Proof - TheFinFlix',text:msg,files:[file]});
+          return;
+        }catch(e){
+          if(e.name==='AbortError') return;
+        }
+      }
+      /* Desktop: copy to clipboard then open WhatsApp */
+      try{
+        await navigator.clipboard.write([new ClipboardItem({[file.type]:file})]);
+        window.open(waUrl,'_blank');
+        showPayToast('Saved! Screenshot copied — paste it in WhatsApp.');
+        return;
+      }catch(e){/* fall through */}
+      window.open(waUrl,'_blank');
+      showPayToast('Saved! Attach your screenshot manually in WhatsApp.');
+    } else {
+      window.open(waUrl,'_blank');
+    }
+
+  }catch(err){
+    console.error('Enroll error:',err);
+    proceedBtn.disabled=false;
+    proceedBtn.innerHTML=origHtml;
+    showPayToast('Could not save enrollment — check your connection and try again.');
+  }
+}
+
+document.querySelectorAll('.buy').forEach(b=>b.onclick=function(){
+  const c=this.closest('.course-card').dataset.course;
+  document.getElementById('payModalCourse').textContent=c;
+  const now=new Date();
+  const opts={day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',hour12:true};
+  document.getElementById('payModalTime').textContent=now.toLocaleString('en-IN',opts);
+  ['payName','payEmail','payMobile'].forEach(id=>{const el=document.getElementById(id);el.value='';el.classList.remove('error');});
+  /* reset screenshot upload */
+  const si=document.getElementById('payScreenshot');si.value='';
+  document.getElementById('payScreenshotPreview').style.display='none';
+  document.getElementById('payUploadPlaceholder').style.display='flex';
+  document.getElementById('payUploadChange').style.display='none';
+  document.getElementById('payUploadWrap').classList.remove('has-file');
+  document.getElementById('payModal').classList.add('open');
+  document.body.style.overflow='hidden';
+});
 
 /* ── Scroll reveal ── */
-const obs=new IntersectionObserver(es=>es.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('vis'),i*70);obs.unobserve(e.target)}}),{threshold:.08,rootMargin:'0px 0px -30px 0px'});
-document.querySelectorAll('.fade-in').forEach(e=>obs.observe(e));
+const obs=new IntersectionObserver(es=>es.forEach(e=>{
+  if(e.isIntersecting){
+    const delay=parseInt(e.target.dataset.delay||0)*80;
+    setTimeout(()=>e.target.classList.add('vis'),delay);
+    obs.unobserve(e.target);
+  }
+}),{threshold:.07,rootMargin:'0px 0px -20px 0px'});
+document.querySelectorAll('.fade-in,.fade-left,.fade-right,.scale-in').forEach(e=>obs.observe(e));
 
-/* ── Header scroll ── */
-addEventListener('scroll',()=>{document.querySelector('header').style.background=scrollY>60?'rgba(255,255,255,.95)':'rgba(255,255,255,.85)'},{passive:true});
+/* ── Mobile nav helpers ── */
+function openMobNav(){document.getElementById('mobNav').classList.add('open');document.body.style.overflow='hidden'}
+function closeMobNav(){document.getElementById('mobNav').classList.remove('open');document.body.style.overflow=''}
+function mobCurSwitch(btn){
+  updatePrices(btn.dataset.cur);
+}
+
+/* ── Scroll progress bar ── */
+const progressBar=document.getElementById('scrollProgress');
+function updateProgress(){
+  const scrollTop=scrollY||document.documentElement.scrollTop;
+  const docH=document.documentElement.scrollHeight-document.documentElement.clientHeight;
+  progressBar.style.width=(docH>0?(scrollTop/docH*100):0)+'%';
+}
+
+/* ── Header scroll state ── */
+const hdr=document.querySelector('header');
+function updateHeader(){
+  if(scrollY>60)hdr.classList.add('header-scrolled');
+  else hdr.classList.remove('header-scrolled');
+  updateProgress();
+}
+addEventListener('scroll',updateHeader,{passive:true});
+
+/* ── Count-up animation for stats ── */
+function countUp(el,target,suffix,duration){
+  const start=performance.now();
+  const isDecimal=String(target).includes('.');
+  const requestFrame=requestAnimationFrame;
+  function update(now){
+    const elapsed=now-start;
+    const progress=Math.min(elapsed/duration,1);
+    const eased=1-Math.pow(1-progress,3);
+    const val=eased*target;
+    el.textContent=(isDecimal?val.toFixed(1):Math.floor(val))+suffix;
+    if(progress<1)requestFrame(update);
+    else el.textContent=target+suffix;
+  }
+  requestFrame(update);
+}
+const statsObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(!e.isIntersecting)return;
+    const el=e.target;
+    const txt=el.textContent;
+    const num=parseFloat(txt.replace(/[^0-9.]/g,''));
+    const suffix=txt.replace(/[0-9.]/g,'');
+    if(!isNaN(num))countUp(el,num,suffix,1400);
+    statsObs.unobserve(el);
+  });
+},{threshold:.5});
+document.querySelectorAll('.stat-num').forEach(e=>statsObs.observe(e));
+</script>
+
+<!-- ── Firebase SDK (CDN) ─────────────────────────────────────────── -->
+<script type="module">
+import { initializeApp }            from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import { getFirestore, collection, addDoc, serverTimestamp }
+                                    from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+import { getStorage, ref as storageRef, uploadBytes, getDownloadURL }
+                                    from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js';
+
+const firebaseConfig = {
+  apiKey:            "AIzaSyDvX_NIgVE5CbdxEzSk_mtr59dvAZi0vIE",
+  authDomain:        "thefinflix-e8b54.firebaseapp.com",
+  projectId:         "thefinflix-e8b54",
+  storageBucket:     "thefinflix-e8b54.firebasestorage.app",
+  messagingSenderId: "9992883765",
+  appId:             "1:9992883765:web:7ba279fa8ba22c9e012b7c",
+  measurementId:     "G-NR2B8V51GZ"
+};
+
+const fbApp   = initializeApp(firebaseConfig);
+const db      = getFirestore(fbApp);
+const storage = getStorage(fbApp);
+
+// Expose so the inline submitPayModal can call it
+window._fbSaveEnrollment = async function({ name, email, mobile, course, enrolled_at, screenshotFile }) {
+
+  // 1 — Upload screenshot to Storage (if provided)
+  let proofUrl  = null;
+  let proofPath = null;
+  if (screenshotFile) {
+    const ext  = screenshotFile.name.split('.').pop() || 'jpg';
+    const ts   = Date.now();
+    const uid  = crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2);
+    proofPath  = `uploads/payment/${ts}_${uid}.${ext}`;
+    const sRef = storageRef(storage, proofPath);
+    await uploadBytes(sRef, screenshotFile);
+    proofUrl = await getDownloadURL(sRef);
+  }
+
+  // 2 — Save record to Firestore
+  const docRef = await addDoc(collection(db, 'user_payments'), {
+    name:        name.trim(),
+    email:       email.trim(),
+    mobile:      mobile.trim(),
+    course:      course.trim(),
+    enrolled_at: enrolled_at,
+    proof_path:  proofPath  || null,
+    proof_url:   proofUrl   || null,
+    wa_sent:     true,
+    created_at:  serverTimestamp()
+  });
+
+  return { id: docRef.id, proof_url: proofUrl };
+};
 </script>
 </body>
 </html>
