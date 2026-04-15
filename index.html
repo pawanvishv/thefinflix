@@ -1357,41 +1357,40 @@ const statsObs=new IntersectionObserver(entries=>{
 document.querySelectorAll('.stat-num').forEach(e=>statsObs.observe(e));
 </script>
 
-<!-- ── Firebase SDK (CDN) ─────────────────────────────────────────── -->
-<script type="module">
-import { initializeApp }            from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-import { getFirestore, collection, addDoc, serverTimestamp }
-                                    from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
-const firebaseConfig = {
-  apiKey:            "AIzaSyDvX_NIgVE5CbdxEzSk_mtr59dvAZi0vIE",
-  authDomain:        "thefinflix-e8b54.firebaseapp.com",
-  projectId:         "thefinflix-e8b54",
-  storageBucket:     "thefinflix-e8b54.firebasestorage.app",
-  messagingSenderId: "9992883765",
-  appId:             "1:9992883765:web:7ba279fa8ba22c9e012b7c",
-  measurementId:     "G-NR2B8V51GZ"
-};
+<!-- ── Firestore REST API (no SDK, bypasses App Check) ────────────── -->
+<script>
+const _FS_PROJECT = 'thefinflix-e8b54';
+const _FS_API_KEY = 'AIzaSyDvX_NIgVE5CbdxEzSk_mtr59dvAZi0vIE';
+const _FS_BASE    = `https://firestore.googleapis.com/v1/projects/${_FS_PROJECT}/databases/(default)/documents`;
 
-const fbApp = initializeApp(firebaseConfig);
-const db    = getFirestore(fbApp);
-
-// Expose so the inline submitPayModal can call it
 window._fbSaveEnrollment = async function({ name, email, mobile, course, enrolled_at, screenshotFile }) {
+  const fields = {
+    name:             { stringValue:  name.trim()      },
+    email:            { stringValue:  email.trim()     },
+    mobile:           { stringValue:  mobile.trim()    },
+    course:           { stringValue:  course.trim()    },
+    enrolled_at:      { stringValue:  enrolled_at      },
+    has_proof_attach: { booleanValue: !!screenshotFile },
+    wa_sent:          { booleanValue: true              },
+    created_at:       { timestampValue: new Date().toISOString() }
+  };
 
-  // Save enrollment record to Firestore
-  // Screenshot is shared directly to WhatsApp (no Storage upload needed)
-  const docRef = await addDoc(collection(db, 'user_payments'), {
-    name:             name.trim(),
-    email:            email.trim(),
-    mobile:           mobile.trim(),
-    course:           course.trim(),
-    enrolled_at:      enrolled_at,
-    has_proof_attach: screenshotFile ? true : false,
-    wa_sent:          true,
-    created_at:       serverTimestamp()
-  });
+  const resp = await fetch(
+    `${_FS_BASE}/user_payments?key=${_FS_API_KEY}`,
+    {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ fields })
+    }
+  );
 
-  return { id: docRef.id };
+  if (!resp.ok) {
+    const err = await resp.json().catch(() => ({}));
+    throw new Error(err.error?.message || `HTTP ${resp.status}`);
+  }
+
+  const data = await resp.json();
+  return { id: data.name?.split('/').pop() };
 };
 </script>
 </body>
