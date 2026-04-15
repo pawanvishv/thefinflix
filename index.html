@@ -461,7 +461,8 @@
   .pay-modal-cancel{padding:12px 16px;font-size:13px;font-weight:600;font-family:'DM Sans';background:var(--bg-alt);color:var(--text-secondary);border:1px solid var(--border);border-radius:11px;cursor:pointer;transition:all .25s;white-space:nowrap}
   .pay-modal-cancel:hover{background:var(--border);color:var(--text-primary)}
   .pay-modal-proceed{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 14px;font-size:13px;font-weight:600;font-family:'DM Sans';background:linear-gradient(135deg,#25d366,#128c7e);color:#fff;border:none;border-radius:11px;cursor:pointer;transition:all .4s cubic-bezier(.22,1,.36,1);box-shadow:0 4px 14px rgba(37,211,102,.3);line-height:1.3;text-align:center}
-  .pay-modal-proceed:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(37,211,102,.4)}
+  .pay-modal-proceed:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 24px rgba(37,211,102,.4)}
+  .pay-modal-proceed:disabled{opacity:.45;cursor:not-allowed;box-shadow:none;transform:none}
   /* mobile — bottom sheet */
   @media(max-width:600px){
     .pay-modal{align-items:flex-end;padding:0}
@@ -577,7 +578,7 @@
         </div>
         <div class="pay-modal-actions">
           <button class="pay-modal-cancel" onclick="closePayModal()">Cancel</button>
-          <button class="pay-modal-proceed" onclick="submitPayModal()">
+          <button class="pay-modal-proceed" id="payProceedBtn" onclick="submitPayModal()" disabled>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
             Share Proof on WhatsApp
           </button>
@@ -1173,9 +1174,27 @@ setInterval(()=>{cp+=(Math.random()-.48)*.0004;const e=document.getElementById('
 
 /* ── Buy ── */
 /* ── Enroll → Payment Modal ── */
+function resetPayForm(){
+  ['payName','payEmail','payMobile','payCity','payState'].forEach(id=>{
+    const el=document.getElementById(id);
+    el.value='';el.classList.remove('error');
+  });
+  const si=document.getElementById('payScreenshot');si.value='';
+  document.getElementById('payScreenshotPreview').style.display='none';
+  document.getElementById('payUploadPlaceholder').style.display='flex';
+  document.getElementById('payUploadChange').style.display='none';
+  document.getElementById('payUploadWrap').classList.remove('has-file');
+  document.getElementById('payProceedBtn').disabled=true;
+}
 function closePayModal(){
   document.getElementById('payModal').classList.remove('open');
   document.body.style.overflow='';
+  resetPayForm();
+}
+function checkPayForm(){
+  const allFilled=['payName','payEmail','payMobile','payCity','payState']
+    .every(id=>document.getElementById(id).value.trim()!=='');
+  document.getElementById('payProceedBtn').disabled=!allFilled;
 }
 
 function handleScreenshotUpload(input){
@@ -1297,15 +1316,14 @@ document.querySelectorAll('.buy').forEach(b=>b.onclick=function(){
   const now=new Date();
   const opts={day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',hour12:true};
   document.getElementById('payModalTime').textContent=now.toLocaleString('en-IN',opts);
-  ['payName','payEmail','payMobile','payCity','payState'].forEach(id=>{const el=document.getElementById(id);el.value='';el.classList.remove('error');});
-  /* reset screenshot upload */
-  const si=document.getElementById('payScreenshot');si.value='';
-  document.getElementById('payScreenshotPreview').style.display='none';
-  document.getElementById('payUploadPlaceholder').style.display='flex';
-  document.getElementById('payUploadChange').style.display='none';
-  document.getElementById('payUploadWrap').classList.remove('has-file');
+  resetPayForm();
   document.getElementById('payModal').classList.add('open');
   document.body.style.overflow='hidden';
+});
+
+// Live validation — enable proceed button only when all fields filled
+['payName','payEmail','payMobile','payCity','payState'].forEach(id=>{
+  document.getElementById(id).addEventListener('input', checkPayForm);
 });
 
 /* ── Scroll reveal ── */
