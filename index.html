@@ -1377,15 +1377,38 @@ document.querySelectorAll('.stat-num').forEach(e=>statsObs.observe(e));
 const _GAS_URL = 'https://script.google.com/macros/s/AKfycbyfFowZTDKGQR14ualPRVWCAv84jAPLGhuSU9ocsDKirCJvnfWV_x_pSMickT0v6gB4/exec';
 
 window._fbSaveEnrollment = async function({ name, email, mobile, city, state, course, enrolled_at, screenshotFile }) {
-  const params = new URLSearchParams({
-    name, email, mobile,
-    city:        city        || '',
-    state:       state       || '',
-    course,
-    enrolled_at: enrolled_at || '',
-    has_proof:   screenshotFile ? 'Yes' : 'No'
-  });
-  await fetch(`${_GAS_URL}?${params.toString()}`, { mode: 'no-cors' });
+  if (screenshotFile) {
+    // Convert image to base64 and POST — Apps Script saves to Drive
+    const base64 = await new Promise((res, rej) => {
+      const r = new FileReader();
+      r.onload  = () => res(r.result);
+      r.onerror = rej;
+      r.readAsDataURL(screenshotFile);
+    });
+    await fetch(_GAS_URL, {
+      method: 'POST',
+      mode:   'no-cors',
+      body:   JSON.stringify({
+        name, email, mobile,
+        city:            city        || '',
+        state:           state       || '',
+        course,
+        enrolled_at:     enrolled_at || '',
+        screenshot_base64: base64,
+        screenshot_type:   screenshotFile.type
+      })
+    });
+  } else {
+    // No screenshot — use GET
+    const params = new URLSearchParams({
+      name, email, mobile,
+      city:        city        || '',
+      state:       state       || '',
+      course,
+      enrolled_at: enrolled_at || ''
+    });
+    await fetch(`${_GAS_URL}?${params.toString()}`, { mode: 'no-cors' });
+  }
 };
 </script>
 </body>
