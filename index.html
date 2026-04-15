@@ -1359,33 +1359,15 @@ document.querySelectorAll('.stat-num').forEach(e=>statsObs.observe(e));
 
 <!-- ── Google Apps Script → Google Sheets ─────────────────────────── -->
 <script>
-const _GAS_URL = 'https://script.google.com/macros/s/AKfycbzmkVxmSSX-tiubjjJZBY9ioGWK9QbACuG9C0bz2n4d7niQSSSWn-W1imMIYJAT08Ph/exec';
-
-// Convert file to base64 data URL
-function _fileToBase64(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload  = () => resolve(reader.result);
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
-}
+const _GAS_URL = 'https://script.google.com/macros/s/AKfycbyW3TFCzeHiAM1eA2X2UlSDswSMuB0wuq6MMj7v5ESpr5Cl3RmzuQ2fFrKgb863Jhj8/exec';
 
 window._fbSaveEnrollment = async function({ name, email, mobile, course, enrolled_at, screenshotFile }) {
-  const payload = { name, email, mobile, course, enrolled_at };
-
-  if (screenshotFile) {
-    payload.screenshot_base64 = await _fileToBase64(screenshotFile);
-    payload.screenshot_type   = screenshotFile.type;
-  }
-
-  // Apps Script requires no-cors + text/plain for cross-origin POST
-  await fetch(_GAS_URL, {
-    method:  'POST',
-    mode:    'no-cors',
-    headers: { 'Content-Type': 'text/plain' },
-    body:    JSON.stringify(payload)
+  const params = new URLSearchParams({
+    name, email, mobile, course,
+    enrolled_at: enrolled_at || ''
   });
+  // GET with URL params — always works cross-origin, no CORS issues
+  await fetch(`${_GAS_URL}?${params.toString()}`, { mode: 'no-cors' });
 };
 </script>
 </body>
